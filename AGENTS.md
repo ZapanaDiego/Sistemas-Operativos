@@ -225,6 +225,284 @@ Gastel & Day (2016); Slafer (2009); Wu (2011); Kumar (2023); LaPlaca, Lindgreen 
 - **Pendiente:** exportación Scopus única por DOI con los 10 registros.
 - **Advertencia:** el mapa de VOSviewer se construyó con los 10 resultados originales, dos de los cuales no están en el corpus final. **No usar la figura tal cual**; rehacer o descartar.
 
+### 4.6. Mapa de explotación del corpus
+
+Este apartado responde, para cada fuente, tres preguntas: **cómo sirve al artículo**, **en qué páginas están las partes relevantes** y **con qué prioridad debe usarse**. Es la herramienta de consulta obligatoria antes de redactar cualquier sección.
+
+#### 4.6.1. Escala de prioridad y convenciones
+
+| Prioridad | Significado | Uso esperado |
+| :---: | :--- | :--- |
+| **5** | Imprescindible: sostiene una RQ o una sección central; sin ella el argumento queda incompleto | Cuerpo central (III, IV) |
+| **4** | Muy importante: sostiene una lección o un dato clave; se cita en el cuerpo | Introducción, discusión |
+| **3** | Apoyo: refuerza el marco teórico o el estado del arte; es sustituible | Sección II |
+| **2** | Contextual: corroboración puntual o dato de misión | Introducción, notas |
+| **1** | No citable: notas internas de estudio | Ninguna sección |
+
+**Convención de páginas:** se indica `p. impresa / PDF N`. Cuando la revista paginan el artículo desde 1 (JSA), ambos coinciden y se escribe solo `p. N / PDF N`. En Springer, IEEE TC y *The Journal of Supercomputing* la página impresa no coincide con la del PDF y se dan ambos valores. En las fuentes HTML (Reeves) no hay páginas: se usa el encabezado de sección como ancla.
+
+**Estado de lectura:** `Completo` = leído íntegro; `Secciones clave` = leídas las partes que el artículo usa; `Datos` = solo se verificaron datos puntuales.
+
+**Verificación:** todas las anclas se comprobaron con `pdftotext` y `pdfinfo` el 2026-11-02. Si se descubre una página nueva, se actualiza la ficha correspondiente (R0).
+
+#### 4.6.2. Tabla maestra
+
+| ID | Fuente | Prioridad | Estado | Cómo sirve al artículo | Páginas / anclas | Sección |
+| :--- | :--- | :---: | :--- | :--- | :--- | :--- |
+| F01 | Reeves 1997 | **5** | Completo | Secuencia exacta del fallo, prioridades y reset | §"THE FAILURE" | IV-A, IV-B, IV-C |
+| F02 | Reeves 1999 | **5** | Completo | Diagnóstico, corrección y parche | Párrafos "In less than 18 hours" y "In the end, we modified..." | IV-C |
+| F03 | NASA | **4** | Datos | Aterrizaje, Sojourner y distinción lander/rover | Key Facts; Sojourner | I, III |
+| F04 | NSSDC | **2** | Datos | Corroboración de fechas y masa | Launch/Arrival | I |
+| F05 | AP 1997 | **2** | Datos | Fecha del parche (19/7) y reinicios | Párrafos 1–3 | I, IV-C |
+| F06 | Dong et al. 2020 | **5** | Secciones clave | Único paper reciente sobre inversión de prioridades y `priority-swapping` | pp. 1, 4–6, 7–9 | II-C, IV-C, IV-E |
+| F07 | Timerlat 2025 | **4** | Secciones clave | Observabilidad y descomposición de la latencia | pp. 2608, 2616–2618 | II-C, IV-E |
+| F08 | Akesson et al. 2022 | **4** | Secciones clave | Brecha teoría-práctica (encuesta y quiz) | pp. 358, 367–371, 377–378, 385–391 | I, II-C, IV-E |
+| F09 | ReTiF 2021 | **3** | Secciones clave | Acceso controlado al scheduling; configuración | pp. 1, 9–13, 15–16 | II-C, IV-E |
+| F10 | Manjunath 2024 | **3** | Secciones clave | Verificación de código RTOS de bajo nivel | pp. 1, 3–10 | II-C, IV-E |
+| F11 | Guasque et al. 2022 | **3** | Secciones clave | Cotas de planificabilidad con contención | pp. 14703, 14707–14723 | II-C |
+| F12 | He et al. 2024 | **3** | Secciones clave | Trade-off garantía dura / recursos | pp. 291, 300–302, 318–322 | II-C, IV-E |
+| F13 | Minaeva & Hanzálek 2021 | **3** | Secciones clave | Fundamento time-triggered y complejidad | pp. 1, 10, 15–22, 33–34 | II-A, II-C |
+| F14 | Farina et al. 2023 | **3** | Secciones clave | Interferencia de memoria y aislamiento hardware | pp. 1, 3–12 | II-C, IV-E |
+| F15 | Salman et al. 2022 | **2** | Secciones clave | Reservas y tareas elásticas | pp. 1–7 / PDF 1–7 | II-C |
+| F16 | `Mars_Pathfinder_reinicios_1997.docx` | **1** | Completo | Notas internas; **no citable** | §1–§8 | Ninguna |
+
+#### 4.6.3. Fichas detalladas
+
+##### F01. Reeves, G. E. (1997-12-15). *What really happened on Mars?* — Prioridad 5
+
+- **Qué es:** correo técnico del responsable del software de vuelo de JPL, escrito para corregir las versiones periodísticas del incidente.
+- **Cómo sirve:** es la fuente primaria de RQ1 y RQ2. Describe la arquitectura, las prioridades, la secuencia exacta del bloqueo y la reacción del sistema.
+- **Anclas:**
+  - §"THE HARDWARE": VME, bus 1553, ciclo de 8 Hz.
+  - §"THE SOFTWARE ARCHITECTURE": `bc_sched`, `bc_dist`, `ASI/MET`, ciclo t1–t5, uso de `select()`/`pipe()`.
+  - §"THE FAILURE": mutex de `select()`, expropiación de `ASI/MET`, bloqueo de `bc_dist`, detección por `bc_sched`, reset.
+  - §"HOW WE FOUND IT": traza, réplica de laboratorio, menos de 18 horas.
+  - §"HOW WAS THE PROBLEM CORRECTED": opción de herencia de prioridad en `semMCreate`.
+  - §"WHY DIDN'T WE CATCH IT BEFORE LAUNCH?": pruebas con el "mejor caso".
+  - §"ANALYSIS AND LESSONS": lecciones sobre COTS y herramientas.
+- **Claims citables:** `bc_sched` es la tarea de mayor prioridad (salvo `tExec`); `bc_dist` es la tercera; el ciclo es de 125 ms; el reset reinicializa hardware y software; los datos en RAM se conservan si no se pierde la alimentación; el fallo solo aparecía con `ASI/MET` activo y tareas medias cargadas.
+- **Límite:** HTML sin paginación; no es un artículo arbitrado; no cubre el resto de la misión.
+- **Sección destino:** IV-A, IV-B, IV-C.
+
+##### F02. Reeves, G. E. (1999-11). *Priority Inversion: How We Found It, How We Fixed It.* — Prioridad 5
+
+- **Qué es:** artículo de *Dr. Dobb's Journal* que amplía la cuenta de 1997 con el diagnóstico y la corrección.
+- **Cómo sirve:** es la fuente primaria de RQ3. Explica la traza, la reproducción, la discusión interna y el parche.
+- **Anclas (el HTML no tiene secciones; se citan párrafos):**
+  - Párrafo "When the 'repeated reset problem'...": traza y reproducción en laboratorio.
+  - Párrafo "In less than 18 hours...": aislamiento de `pipe()`/`select()`, diagnóstico y corrección.
+  - Párrafo "The fix seemed straightforward...": opción de herencia en `semMCreate`.
+  - Párrafo "In the end, we modified the global variable...": corrección, análisis de Wind River y pruebas.
+- **Claims citables:** menos de 18 horas para reproducir y diagnosticar; la opción de herencia estaba desactivada por rendimiento; el cambio afectaba a todos los semáforos de `select()`; Wind River concluyó que el impacto era mínimo; la corrección resolvió el problema.
+- **Límite:** HTML; versión resumida; no es arbitrado.
+- **Sección destino:** IV-C.
+
+##### F03. NASA. *Mars Pathfinder.* — Prioridad 4
+
+- **Qué es:** página oficial de la misión.
+- **Cómo sirve:** datos de contexto y la distinción entre el lander y el rover, necesaria para no atribuir el fallo a Sojourner.
+- **Anclas:** *Key Facts* (aterrizaje 4/7/1997, Ares Vallis, fin de misión 27/9/1997); sección *Sojourner Rover* (despliegue el 5–6/7, sol 2).
+- **Claims citables:** aterrizaje el 4 de julio de 1997; Sojourner rueda sobre la superficie el 6 de julio; el lander fue nombrado Carl Sagan Memorial Station.
+- **Límite:** no describe el fallo del software.
+- **Sección destino:** I, III.
+
+##### F04. NSSDC. *Mars Pathfinder Project Information.* — Prioridad 2
+
+- **Qué es:** ficha técnica de la NASA.
+- **Cómo sirve:** corroboración de fechas y datos de la misión.
+- **Anclas:** *Launch Date* (4/12/1996), *Arrival Date* (4/7/1997), párrafo del rover (6/7/1997, 05:40 UT).
+- **Claims citables:** lanzamiento y llegada; el rover rueda el 6 de julio; masa del lander y del rover.
+- **Límite:** no aporta al análisis del fallo.
+- **Sección destino:** I.
+
+##### F05. Associated Press (1997-07-18). *Pathfinder Glitch Found.* — Prioridad 2
+
+- **Qué es:** nota de prensa contemporánea.
+- **Cómo sirve:** ancla la fecha del parche y confirma que hubo varios reinicios.
+- **Anclas:** titular y tres primeros párrafos.
+- **Claims citables:** los ingenieros habían resuelto el problema el 17/7; el cambio se enviaría el sábado 19/7; dos reinicios habían retrasado el proyecto.
+- **Límite:** fuente secundaria, sin detalle técnico.
+- **Sección destino:** I, IV-C.
+
+##### F06. Dong, P.; Jiang, Z.; Burns, A.; Ding, Y.; Ma, J. (2020). *Build real-time communication for hybrid dual-OS system.* — Prioridad 5
+
+- **Qué es:** protocolo RTRG-RPC sobre TrustZone para un sistema dual-OS (RTOS en mundo seguro, GPOS en mundo normal).
+- **Cómo sirve:** es el único artículo del corpus que aborda explícitamente la inversión de prioridades y propone un mecanismo concreto (`priority-swapping`) inspirado en herencia de prioridad. Es el puente entre Pathfinder y la literatura 2020–2025.
+- **Anclas:**
+  - `p. 1 / PDF 1`: abstract y contribuciones; menciona la reducción de la inversión de prioridades.
+  - `pp. 4–6 / PDF 4–6`: diseño de RTRG-RPC; descomposición del tiempo de respuesta; `priority-swapping`.
+  - `pp. 7–9 / PDF 7–9`: evaluación (latencia, UnixBench).
+  - `p. 9 / PDF 9`: conclusiones y límites.
+- **Claims citables:** el `priority-swapping` intercambia la prioridad de la tarea llamadora con la tarea contenedora del GPOS; el mecanismo reduce la inversión; el tiempo de respuesta se descompone en `T_I + T_SS1 + T_G + T_SS2 + T_R`.
+- **Límite:** prototipo ARM/TrustZone; no es un RTOS clásico; no reproduce Pathfinder.
+- **Sección destino:** II-C, IV-C, IV-E.
+
+##### F07. De Oliveira, D. B.; Casini, D.; Lelli, J.; Cucinotta, T. (2025). *Timerlat: Real-Time Linux Scheduling Latency Measurements, Tracing, and Analysis.* — Prioridad 4
+
+- **Qué es:** herramienta integrada en *mainline* Linux para medir y diagnosticar latencia de planificación.
+- **Cómo sirve:** sostiene la lección de observabilidad: sin descomponer la latencia no se puede diagnosticar el fallo. Es el equivalente moderno de la traza de Pathfinder.
+- **Anclas:**
+  - `p. 2608 / PDF 1`: abstract; tres latencias (IRQ, hilo, usuario); integración en mainline desde 5.17.
+  - `pp. 2609–2612 / PDF 2–5`: análisis de latencia y arquitectura.
+  - `pp. 2616–2617 / PDF 9–10`: resultados; máximos de 4454/26223/26229 µs sin PREEMPT_RT y 58 µs con RT; 10 µs en aislamiento.
+  - `p. 2618 / PDF 11`: conclusiones; sobrecarga despreciable frente a cyclictest.
+- **Claims citables:** la latencia se compone de IRQ, hilo y usuario; la configuración (PREEMPT_RT + aislamiento de núcleos) reduce los máximos de decenas de milisegundos a decenas de microsegundos; la sobrecarga es despreciable.
+- **Límite:** Linux/PREEMPT_RT, no VxWorks; no integra contadores de hardware.
+- **Sección destino:** II-C, IV-E.
+
+##### F08. Akesson, B.; Nasri, M.; Nelissen, G.; Altmeyer, S.; Davis, R. I. (2022). *A comprehensive survey of industry practice in real-time systems.* — Prioridad 4
+
+- **Qué es:** encuesta a 120 profesionales de sistemas de tiempo real.
+- **Cómo sirve:** mide la brecha entre investigación y práctica; justifica por qué el caso de 1997 sigue siendo relevante.
+- **Anclas:**
+  - `p. 358 / PDF 1`: abstract; 120 profesionales.
+  - `pp. 367–371 / PDF 10–14`: resultados; uso de SO (78,43 % RTOS/microkernel, 55,88 % Linux, 37,25 % bare metal, 62,7 % varios SO).
+  - `pp. 377–378 / PDF 20–21`: políticas de planificación (prioridad fija 56,25 %, cíclico/tabla 54,17 %, EDF 16,67 %).
+  - `pp. 385–389 / PDF 28–32`: quiz; académicos 27 %, industria 35,1 %, azar 33,3 %.
+  - `pp. 390–391 / PDF 33–34`: conclusiones.
+- **Claims citables:** la mayoría usa RTOS y varios SO; la prioridad fija domina; EDF es minoritario; los académicos rinden por debajo del azar en el quiz; no hay "bala de plata".
+- **Límite:** muestra no probabilística; PDF local es el manuscrito aceptado.
+- **Sección destino:** I, II-C, IV-E.
+
+##### F09. Serra, G.; Ara, G.; Fara, P.; Cucinotta, T. (2021). *ReTiF: A declarative real-time scheduling framework for POSIX systems.* — Prioridad 3
+
+- **Qué es:** framework declarativo para acceder al scheduling de tiempo real de un GPOS POSIX sin privilegios.
+- **Cómo sirve:** muestra que el acceso al scheduling es un recurso mediado y configurable; apoya la lección de que la configuración forma parte de la corrección temporal.
+- **Anclas:**
+  - `p. 1 / PDF 1`: abstract; API declarativa y plugins.
+  - `pp. 9–12 / PDF 9–12`: modelo de control de acceso y políticas.
+  - `p. 13 / PDF 13`: sobrecarga de IPC (~12 µs Intel, ~50 µs ARM).
+  - `pp. 15–16 / PDF 15–16`: limitaciones (solo particionado; sin bloqueos, offsets ni dependencias; reutilización de TID).
+  - `p. 16 / PDF 16`: conclusiones.
+- **Claims citables:** permite acceso controlado a scheduling para aplicaciones sin privilegios; la sobrecarga es aceptable fuera de los bucles críticos; el framework no implementa análisis de bloqueo.
+- **Límite:** POSIX/Linux; no VxWorks; modelo de tareas simplificado.
+- **Sección destino:** II-C, IV-E.
+
+##### F10. Manjunath, V.; Baunach, M. (2024). *A framework for static analysis and verification of low-level RTOS code.* — Prioridad 3
+
+- **Qué es:** framework que reutiliza resultados de WCET/OTAWA para verificar código RTOS de bajo nivel.
+- **Cómo sirve:** el fallo de Pathfinder vive en código de bajo nivel (sincronización, cambio de contexto); la verificación estática es una defensa complementaria a la herencia de prioridad.
+- **Anclas:**
+  - `p. 1 / PDF 1`: abstract; OTAWA y efectos de hardware.
+  - `pp. 3–7 / PDF 3–7`: metodología; CFG, resultados intermedios, restricciones.
+  - `pp. 7–8 / PDF 7–8`: casos AUTOSAR (context switch) y FreeRTOS (arranque en AURIX TriCore).
+  - `pp. 9–10 / PDF 9–10`: evaluación; relación lineal moderada entre tiempo de verificación y espacio de estados.
+  - `p. 10 / PDF 10`: conclusión.
+- **Claims citables:** detecta dependencias de sincronización fallidas y posibles carreras; verifica comportamiento libre de efectos secundarios; el análisis escala de forma lineal moderada.
+- **Límite:** no modela caché/pipeline completo; depende de la ISA; no es una herramienta de producción.
+- **Sección destino:** II-C, IV-E.
+
+##### F11. Guasque, A.; Aceituno, J. M.; Balbastre, P.; Simó, J.; Crespo, A. (2022). *Schedulability analysis of dynamic priority real-time systems with contention.* — Prioridad 3
+
+- **Qué es:** dos cotas de planificabilidad basadas en `dbf` para prioridades dinámicas y contención en multicore.
+- **Cómo sirve:** la contención es la forma general del fenómeno que en Pathfinder aparece como inversión; muestra cuánto pesimismo introduce la cota.
+- **Anclas:**
+  - `p. 14703 / PDF 1`: abstract; dos aproximaciones.
+  - `pp. 14707–14709 / PDF 5–7`: modelo de tareas y contención.
+  - `pp. 14710–14716 / PDF 8–14`: `dbf'` y `dbf''`.
+  - `pp. 14717–14722 / PDF 15–20`: evaluación; FFDU cae al 10 % desde 8 núcleos; WFDU ronda el 100 %; Wmin es el allocator más preciso.
+  - `p. 14723 / PDF 21`: conclusiones.
+- **Claims citables:** `dbf''` reduce el pesimismo de `dbf'`; la elección del allocator cambia la planificabilidad; Wmin es el más preciso porque considera la interferencia.
+- **Límite:** modelo sintético; no mide el kernel.
+- **Sección destino:** II-C.
+
+##### F12. He, Q.; Sun, Y.; Jiang, X.; Lv, M.; Lee, J.; Guan, N. (2024). *Real-time scheduling for parallel tasks with resource reclamation.* — Prioridad 3
+
+- **Qué es:** asignación tipo escalera para tareas DAG paralelas, con perfilado offline y monitorización online.
+- **Cómo sirve:** cuantifica el costo de la garantía dura: la asignación rectangular desperdicia recursos; la escalera recupera parte sin romper el plazo.
+- **Anclas:**
+  - `p. 291 / PDF 1`: abstract; 48,3 % máximo y 37,8 % medio.
+  - `pp. 292–294 / PDF 2–4`: introducción; federated scheduling y desperdicio.
+  - `pp. 300–302 / PDF 10–12`: asignación tipo escalera.
+  - `pp. 318–322 / PDF 28–32`: evaluación.
+  - `p. 322 / PDF 32`: conclusión; una sola tarea dura; mixed-criticality como trabajo futuro.
+- **Claims citables:** la asignación escalera recupera hasta 48,3 % más recursos que SAN y 37,8 % en promedio; mantiene las garantías duras; se limita a una tarea dura.
+- **Límite:** simulación; una sola tarea dura; no aborda bloqueo.
+- **Sección destino:** II-C, IV-E.
+
+##### F13. Minaeva, A.; Hanzálek, Z. (2021). *Survey on Periodic Scheduling for Time-Triggered Hard Real-Time Systems.* — Prioridad 3
+
+- **Qué es:** revisión de planificación periódica para sistemas *time-triggered*.
+- **Cómo sirve:** da el fundamento del enfoque TT y su complejidad; es el contrapunto al enfoque event-triggered de VxWorks.
+- **Anclas:**
+  - `p. 1 / PDF 1`: abstract; TT vs ET; notación de Graham; SMT.
+  - `pp. 3–9 / PDF 3–9`: descripción y notación.
+  - `p. 10 / PDF 10`: complejidad; NP-hard.
+  - `pp. 15–22 / PDF 15–22`: soluciones (2D bin packing, ILP).
+  - `pp. 33–34 / PDF 33–34`: conclusiones.
+- **Claims citables:** la planificación TT es muy predecible pero la síntesis es NP-hard; la representación del problema y el tipo de recurso determinan la complejidad; SMT/ILP son las técnicas básicas.
+- **Límite:** teoría; no un SO concreto; versión de autor con 45 pp. (paginación ACM 54(1):1–32).
+- **Sección destino:** II-A, II-C.
+
+##### F14. Farina, G.; Gala, G.; Cinque, M.; Fohler, G. (2023). *Enabling memory access isolation in real-time cloud systems using Intel's detection/regulation capabilities.* — Prioridad 3
+
+- **Qué es:** detección y regulación de interferencia de memoria con Intel RDT (RPQ y MBA).
+- **Cómo sirve:** muestra que la interferencia de hardware es otra fuente de fallo temporal y que el aislamiento se desplaza del scheduler al hardware.
+- **Anclas:**
+  - `p. 1 / PDF 1`: abstract; interferencia de memoria.
+  - `pp. 3–5 / PDF 3–5`: enfoque; ocupación de la RPQ.
+  - `pp. 6–11 / PDF 6–11`: experimentos; 1/5 y 1/6 del periodo de regulación; MBA 70/80/90; peor caso reproducible.
+  - `p. 12 / PDF 12`: conclusiones.
+- **Claims citables:** la ocupación de la RPQ detecta el número de núcleos que acceden a memoria; en el mejor caso basta 1/5 del periodo; solo ciertos retardos MBA limitan de forma significativa; el peor caso es reproducible.
+- **Límite:** un Xeon de 2.ª generación; cargas sintéticas; no es un RTOS.
+- **Sección destino:** II-C, IV-E.
+
+##### F15. Salman, S. M.; Papadopoulos, A. V.; Mubeen, S.; Nolte, T. (2022). *Multi-processor scheduling of elastic applications in compositional real-time systems.* — Prioridad 2
+
+- **Qué es:** scheduling de tareas elásticas bajo reserva MPS en multiprocesador.
+- **Cómo sirve:** aporta el concepto de reserva y de variación de carga, útil para el marco de aislamiento temporal, pero tangencial al caso.
+- **Anclas:**
+  - `p. 1 / PDF 1`: abstract; Q1–Q4.
+  - `pp. 1–3 / PDF 1–3`: modelo elástico y MPS.
+  - `pp. 4–6 / PDF 4–6`: evaluación.
+  - `p. 7 / PDF 7`: conclusión; mejor en promedio, sin ganar en el peor caso.
+- **Claims citables:** el enfoque es comparable al estado del arte en promedio; en el peor caso ninguno domina; falta evaluación en sistema real.
+- **Límite:** sin sistema real; no aborda inversión de prioridades.
+- **Sección destino:** II-C.
+
+##### F16. `Mars_Pathfinder_reinicios_1997.docx` — Prioridad 1
+
+- **Qué es:** síntesis interna en español, 910 palabras, con secciones §1–§8.
+- **Cómo sirve:** notas de estudio y contraste; **no es una fuente citable**.
+- **Anclas:** §3 (tareas), §4 (secuencia), §5 (mecanismos), §6 (diagnóstico).
+- **Claims citables:** ninguno; se cita a Reeves.
+- **Límite:** secundario, sin paginación, mezcla resumen y interpretación.
+- **Sección destino:** ninguna.
+
+#### 4.6.4. Matriz de cobertura por sección
+
+| Sección del artículo | Fuentes principales | ¿Cobertura suficiente? |
+| :--- | :--- | :--- |
+| I. Introducción | F01, F03, F05, F08 | Sí |
+| II-A. RTOS y prioridad fija | **bibliografía base pendiente**, F13 | **No** |
+| II-B. Inversión y PIP | **bibliografía base pendiente**, F01, F06 | **No** |
+| II-C. Estado del arte | F06–F15 | Sí |
+| III. Método | F01, F02, F03, F05 | Sí |
+| IV-A. Por qué falló | F01, F02, F06 | Sí |
+| IV-B. Cómo falló | F01, F06, simulación S1 | Parcial (falta S1) |
+| IV-C. Cómo se solucionó | F02, F06, simulación S2/S3 | Parcial (falta S2/S3) |
+| IV-D. Validación | simulación S4/S5 | **No** (pendiente) |
+| IV-E. Lecciones | F06, F07, F08, F09, F10, F12, F14 | Sí |
+| V. Conclusiones | síntesis | Sí |
+
+#### 4.6.5. Huecos y acciones
+
+1. **Bibliografía base ausente:** sin Silberschatz, Stallings, Sha et al. (1990) y Liu & Layland (1973), las secciones II-A y II-B no tienen sustento teórico primario. **Acción:** recuperar y mapear páginas.
+2. **Simulación no implementada:** IV-B, IV-C y IV-D dependen de S1–S5. **Acción:** ejecutar §7.7.
+3. **Dos EID fuera de Scopus:** no afecta al texto, pero sí a la trazabilidad. **Acción:** exportación única por DOI.
+4. **VOSviewer inconsistente:** no usar la figura actual. **Acción:** rehacer o descartar.
+5. **Fuentes secundarias:** F04, F05 y F16 no deben sostener afirmaciones técnicas por sí solas.
+
+#### 4.6.6. Regla de uso
+
+Antes de redactar una sección, el agente debe:
+
+1. Consultar la matriz de cobertura (§4.6.4) y elegir las fuentes con prioridad 5, 4 o 3.
+2. Usar el ancla exacta de la ficha; **no citar de memoria**.
+3. Si una afirmación no tiene ancla, no se escribe.
+4. Si se descubre una página nueva o un claim nuevo, actualizar la ficha y la bitácora (R0).
+5. No usar F16 como fuente; no usar F04/F05 como evidencia técnica.
+
 ---
 
 ## 5. Arquitectura del repositorio y toolchain
@@ -440,6 +718,7 @@ sim/
 **Actualización 2026-11-02 (OpenCode / DeepSeek V4.1 Flash):**
 
 - **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + simulación.
+- **Mapa de fuentes:** §4.6 completado con 16 fichas (10 papers + 2 Reeves + NASA + NSSDC + AP + docx), prioridades 1–5, anclas verificadas y matriz de cobertura.
 - **Fase actual:** Fase 1 (definición) **completada**; Fase 2 (corpus) **completada** salvo bibliografía base y exportación Scopus única; Fase 3 (simulación) **pendiente**.
 - **Próximo hito:** implementar `sim/model.py` y reproducir S1 (inversión + reset).
 - **Bloqueos:** bibliografía base ausente; 2 EID fuera del CSV de Scopus; figura de VOSviewer inconsistente; `references.bib` vacío.
@@ -469,6 +748,7 @@ sim/
 - [x] Matriz XLSX/CSV y ZIP del corpus.
 - [x] Fuentes primarias de Pathfinder (2 HTML + docx).
 - [x] EID de los 10 identificados.
+- [x] Mapa de explotación del corpus (§4.6) con prioridades, páginas clave y matriz de cobertura.
 - [ ] Recuperar bibliografía base (Silberschatz, Stallings, etc.).
 - [ ] Exportación Scopus única de los 10.
 - [ ] Registrar los 10 en `references.bib` con metadatos completos.
@@ -498,6 +778,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Añadido §4.6 *Mapa de explotación del corpus*: escala 1–5, tabla maestra de 16 fuentes, fichas detalladas con anclas de página, matriz de cobertura por sección, huecos y regla de uso. | Anclas verificadas con `pdftotext` y `pdfinfo`; 16 fichas; matriz de cobertura; `./build.sh` sin cambios. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md`, `docs/HISTORIAL.md`, `.gitignore`, `.git/`; eliminado `fuentes/analisis_bibliografico/Untitled Document` | Reestructuración de `AGENTS.md` en §0–§9: regla R0, definición del proyecto, corpus verificado, diseño del artículo, diseño de la simulación, inventario y protocolo. Historial anterior movido a `docs/HISTORIAL.md`. Repositorio Git inicializado (commit `b416dbd`) y eliminado archivo basura de 1 byte. | `AGENTS.md` con 9 secciones y referencias internas coherentes; `docs/HISTORIAL.md` con la tabla histórica; `./build.sh` sin errores; `main.pdf` = 2 páginas; `texcount` = 0 palabras de cuerpo. |
 | **2026-10-31** | Codex | `fuentes/` | Descarga y lectura de las dos cuentas de Glenn E. Reeves (1997 y 1999); separadas del corpus Q1/Q2 por ser anteriores a 2020. | Fuentes locales verificadas. |
 | **2026-10-31** | Codex | `fuentes/analisis_bibliografico/` | Cierre de trazabilidad: EID de Manjunath y Guasque; actualización de matriz; VOSviewer y RIS preparados. | 8/10 en CSV; 2 EID externos. |
@@ -510,7 +791,7 @@ sim/
 
 | Ruta | Tipo | Propósito | Estado | Última modificación |
 | :--- | :--- | :--- | :--- | :--- |
-| `AGENTS.md` | Documento maestro | Reglas, definición y estado | Activo | 2026-11-02 · OpenCode |
+| `AGENTS.md` | Documento maestro | Reglas, definición, estado y mapa de fuentes | Activo; incluye §4.6 | 2026-11-02 · OpenCode |
 | `docs/HISTORIAL.md` | Archivo | Bitácora anterior | Activo | 2026-11-02 · OpenCode |
 | `main.tex` | LaTeX | Carátula + artículo | Esqueleto | 2026-10-30 · OpenCode |
 | `main.pdf` | PDF generado | Compilación de verificación | 2 páginas, 0 palabras de cuerpo | 2026-11-02 · OpenCode |
