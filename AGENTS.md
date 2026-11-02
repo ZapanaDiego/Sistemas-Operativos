@@ -799,6 +799,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Ampliado el contrato local con la secuencia completa del film (15 planos detallados), guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l` = 803; 15 planos; tablas y secciones revisadas; `AGENTS.md` global sincronizado. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Creación del contrato local del film 3D y registro del cambio de alcance a "solo film" (artículo y motor S0–S5 archivados; riesgo académico asumido). | `ls -la simulacion3D`; contrato revisado; §3, §6, §7, §8.1, §8.2 y §8.4 actualizados. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Añadido §4.6 *Mapa de explotación del corpus*: escala 1–5, tabla maestra de 16 fuentes, fichas detalladas con anclas de página, matriz de cobertura por sección, huecos y regla de uso. | Anclas verificadas con `pdftotext` y `pdfinfo`; 16 fichas; matriz de cobertura; `./build.sh` sin cambios. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md`, `docs/HISTORIAL.md`, `.gitignore`, `.git/`; eliminado `fuentes/analisis_bibliografico/Untitled Document` | Reestructuración de `AGENTS.md` en §0–§9: regla R0, definición del proyecto, corpus verificado, diseño del artículo, diseño de la simulación, inventario y protocolo. Historial anterior movido a `docs/HISTORIAL.md`. Repositorio Git inicializado (commit `b416dbd`) y eliminado archivo basura de 1 byte. | `AGENTS.md` con 9 secciones y referencias internas coherentes; `docs/HISTORIAL.md` con la tabla histórica; `./build.sh` sin errores; `main.pdf` = 2 páginas; `texcount` = 0 palabras de cuerpo. |
@@ -833,7 +834,7 @@ sim/
 | `fuentes/analisis_bibliografico/VOSviewer_*` | Datos | Mapa bibliométrico | **Inconsistente** | 2026-10-31 |
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
 | `demo/` | Código | Demo C determinista para el film (PIP off/on) | **Planificado** | — |
-| `simulacion3D/AGENTS.md` | Documento | Contrato local del film 3D: alcance, storyboard, pipeline y R0 | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo | 2026-11-02 · OpenCode |
 | `slides/` | Presentación | Slides de la exposición | Pendiente (exposición) | — |
 | `.gitignore` | Git | Exclusiones | Activo | 2026-11-02 · OpenCode |
 
