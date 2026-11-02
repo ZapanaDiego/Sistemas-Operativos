@@ -1,0 +1,176 @@
+\documentclass[journal]{IEEEtran}
+
+% --- Paquetes Requeridos y Recomendados ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{calc,babel}
+
+% --- Paleta de Colores Oficial Universidad La Salle ---
+\definecolor{lasalledark}{HTML}{0D2354}
+\definecolor{lasalleblue}{HTML}{163982}
+\definecolor{lasallelight}{HTML}{2E63C5}
+
+% --- Gráficos e Hipervínculos ---
+\graphicspath{{img/}}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue}
+
+% --- Términos en español para IEEEtran ---
+\addto\captionsspanish{\renewcommand\IEEEkeywordsname{Palabras clave}}
+\renewcommand\IEEEkeywordsname{Palabras clave}
+
+% ==============================================================================
+% OBJETIVO DE EXTENSIÓN (requisito del curso)
+% 5 a 10 páginas de SOLO TEXTO en IEEE dos columnas = ~4,250 a 8,500 palabras.
+% Verificar con: make count   (o texcount -inc -sub=none main.tex)
+% ==============================================================================
+
+\begin{document}
+\shorthandoff{<>}
+
+% ==============================================================================
+% CARÁTULA INSTITUCIONAL - UNIVERSIDAD LA SALLE (NO MODIFICAR)
+% ==============================================================================
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[lasalledark] (current page.north west) rectangle ([xshift=1.2cm]current page.south west);
+    \fill[lasalleblue] ([xshift=1.2cm]current page.north west) rectangle ([xshift=1.5cm]current page.south west);
+    \fill[lasallelight] ([xshift=1.5cm]current page.north west) rectangle ([xshift=1.7cm]current page.south west);
+    \fill[lasalleblue!12] ([yshift=-4.5cm]current page.north east) -- (current page.north east) -- ([xshift=-6.5cm]current page.north east) -- cycle;
+    \fill[lasalleblue!30] ([yshift=-2.8cm]current page.north east) -- (current page.north east) -- ([xshift=-4.0cm]current page.north east) -- cycle;
+    \fill[lasallelight!50] ([yshift=-1.5cm]current page.north east) -- (current page.north east) -- ([xshift=-2.2cm]current page.north east) -- cycle;
+    \fill[lasalleblue!15] ([xshift=-3cm]current page.south east) -- (current page.south east) -- ([yshift=2cm]current page.south east) -- cycle;
+  \end{tikzpicture}
+  \centering
+  \begin{minipage}[c][0.92\textheight][s]{0.82\textwidth}
+    \centering
+    \vspace*{0.4cm}
+    \includegraphics[width=0.38\textwidth]{img/logoLaSalleUniversidad.png}\par
+    \vspace{0.4cm}
+    {\large\bfseries\color{lasalledark} Facultad de Ingeniería\par}
+    \vspace{0.15cm}
+    {\large\bfseries\color{lasalleblue} Carrera Profesional de Ingeniería de Software\par}
+    \vfill
+    {\color{lasalleblue}\rule{\textwidth}{1.8pt}}\\[0.3cm]
+    {\Large\bfseries\color{lasalledark} [TÍTULO PENDIENTE]\par}
+    \vspace{0.3cm}
+    {\large\bfseries\color{lasalleblue} Trabajo Final de Sistemas Operativos\par}
+    \vspace{0.3cm}
+    {\color{lasalleblue}\rule{\textwidth}{1.8pt}}
+    \vfill
+    \begin{flushleft}
+      \hspace*{0.3cm}
+      \begin{tabular}{ll}
+        \textbf{\color{lasalledark} Asignatura:} & Sistemas Operativos \\[0.15cm]
+        \textbf{\color{lasalledark} Docente:}    & Mg. Maribel Molina Barriga \\[0.15cm]
+        \textbf{\color{lasalledark} Integrantes:} & $\bullet$ Diego Eduardo Zapana Choquehuayta \\
+                                                  & $\bullet$ Heydy Anyely Castillo Arocutipa \\
+                                                  & $\bullet$ Angelica Giovanna Huaman Cuba \\
+                                                  & $\bullet$ Grecia Anhi Mamani Larico \\
+      \end{tabular}
+    \end{flushleft}
+    \vfill
+    {\large\bfseries\color{lasalledark} Arequipa, Perú\par}
+    \vspace{0.15cm}
+    {\small\color{gray} \today\par}
+  \end{minipage}
+\end{titlepage}
+
+\clearpage
+\twocolumn
+\setcounter{page}{1}
+
+% ==============================================================================
+% ARTÍCULO CIENTÍFICO IEEE (DOS COLUMNAS) - ESQUELETO VACÍO
+% ==============================================================================
+
+\title{[TÍTULO PENDIENTE]\\[0.2cm]{\large Trabajo Final de Sistemas Operativos}}
+
+\maketitle
+
+% =========================================================================
+% RESUMEN Y PALABRAS CLAVE
+% =========================================================================
+\begin{abstract}
+% PENDIENTE (150--250 palabras, un solo párrafo, sin citas):
+%   1) Contexto y motivación.
+%   2) Problema / brecha de investigación.
+%   3) Método o enfoque.
+%   4) Hallazgos o resultados principales.
+%   5) Conclusión e impacto.
+\end{abstract}
+
+\begin{IEEEkeywords}
+% PENDIENTE: 4--6 términos normalizados (IEEE Thesaurus / ACM CCS).
+\end{IEEEkeywords}
+
+% =========================================================================
+% I. INTRODUCCIÓN
+% =========================================================================
+\section{Introducción}
+\label{sec:introduccion}
+
+% PENDIENTE:
+%   - Contextualización del área de Sistemas Operativos.
+%   - Problemática técnica contemporánea.
+%   - Brecha de investigación y motivación.
+%   - Objetivos y preguntas de investigación (RQ1, RQ2, ...).
+%   - Contribuciones.
+%   - Organización del resto del artículo.
+
+% =========================================================================
+% II. MÉTODO
+% =========================================================================
+\section{Método}
+\label{sec:metodo}
+
+% PENDIENTE:
+%   - Preguntas de investigación formalizadas.
+%   - Estrategia de búsqueda y selección de literatura (2021--2026).
+%   - Criterios de inclusión y exclusión.
+%   - Taxonomía o criterios de comparación técnica.
+%   - Proceso de análisis y síntesis.
+
+% =========================================================================
+% III. DESARROLLO Y DISCUSIÓN
+% =========================================================================
+\section{Desarrollo y Discusión}
+\label{sec:desarrollo}
+
+% PENDIENTE (sección central y más extensa):
+%   - Subsecciones temáticas según la taxonomía.
+%   - Análisis comparativo de mecanismos internos del kernel.
+%   - Tablas y figuras de arquitectura.
+%   - Discusión crítica: trade-offs, viabilidad, vacíos en la literatura.
+
+% =========================================================================
+% IV. CONCLUSIONES
+% =========================================================================
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+% PENDIENTE:
+%   - Respuesta directa a cada pregunta de investigación.
+%   - Implicaciones prácticas.
+%   - Limitaciones del estudio.
+%   - Líneas de investigación futura.
+
+% =========================================================================
+% REFERENCIAS BIBLIOGRÁFICAS
+% Se activan cuando exista la primera cita real en references.bib.
+% =========================================================================
+% \bibliographystyle{IEEEtran}
+% \bibliography{references}
+
+\end{document}

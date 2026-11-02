@@ -1,0 +1,24 @@
+# Auxiliares de LaTeX
+*.aux
+*.log
+*.out
+*.blg
+*.bbl
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.dvi
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editor (opcional)
+*.swp

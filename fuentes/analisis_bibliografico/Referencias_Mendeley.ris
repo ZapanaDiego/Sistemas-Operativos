@@ -1,0 +1,129 @@
+TY  - JOUR
+TI  - ReTiF: A declarative real-time scheduling framework for POSIX systems
+AU  - Serra, Gabriele
+AU  - Ara, Gabriele
+AU  - Fara, Pietro
+AU  - Cucinotta, Tommaso
+PY  - 2021
+JO  - Journal of Systems Architecture
+DO  - 10.1016/j.sysarc.2021.102210
+UR  - https://doi.org/10.1016/j.sysarc.2021.102210
+AB  - This paper proposes a novel framework providing a declarative interface to access real-time process scheduling services available in an operating system kernel. The main idea is to let applications declare their temporal requirements or characteristics without knowing exactly which underlying scheduling algorithms are offered by the system. The proposed framework can adequately handle such a set of heterogeneous requirements configuring the platform and partitioning the requests among the available multitude of cores, so to exploit the various scheduling disciplines that are available in the kernel, matching application requirements in the best possible way. The framework is realized with a modular architecture in which different plugins handle independently certain real-time scheduling features. The architecture is designed to make its behavior customization easier and enhance the support for other operating systems by introducing and configuring additional plugins. © 2021 Elsevier B.V.
+ER  - 
+
+TY  - JOUR
+TI  - Real-time scheduling for parallel tasks with resource reclamation
+AU  - He, Qingqiang
+AU  - Sun, Yongzheng
+AU  - Jiang, Xu
+AU  - Lv, Mingsong
+AU  - Lee, Jinkyu
+AU  - Guan, Nan
+PY  - 2024
+JO  - Real-Time Systems
+DO  - 10.1007/s11241-024-09421-9
+UR  - https://doi.org/10.1007/s11241-024-09421-9
+AB  - This paper considers the real-time scheduling of a parallel task with reclaiming computing resources, which can be utilized for soft real-time tasks or switching to low-energy mode to save energy. Existing works allocate a rectangular piece of computing resources based on the worst-case characterizations of the task to guarantee the deadline, which inherently incurs severe resource wasting due to coarse-grained resource allocation. To address this resource-wasting problem, this paper proposes the ladder-like resource allocation (i.e., a series of rectangular pieces of computing resources). To characterize the ladder-like resource allocation, we present two concepts called resource distribution and allocation vector, which serve as the interfaces between hard and soft real-time tasks. For the former, we derive schedulability tests under the given two interfaces; for the latter, we discuss the methods of determining the two interfaces to reclaim computing resources. This paper is the first work to fully explore the concept of ladder-like resource allocation and its potential consequences on computing resources, soft real-time tasks, and energy. Experiments demonstrate that the proposed approach can effectively reclaim more computing resources than existing approaches while maintaining hard real-time guarantees. © The Author(s) 2024.
+ER  - 
+
+TY  - JOUR
+TI  - A comprehensive survey of industry practice in real-time systems
+AU  - Akesson, Benny
+AU  - Nasri, Mitra
+AU  - Nelissen, Geoffrey
+AU  - Altmeyer, Sebastian
+AU  - Davis, Robert I.
+PY  - 2022
+JO  - Real-Time Systems
+DO  - 10.1007/s11241-021-09376-1
+UR  - https://doi.org/10.1007/s11241-021-09376-1
+AB  - This paper presents results and observations from a survey of 120 industry practitioners in the field of real-time embedded systems. The survey provides insights into the characteristics of the systems being developed today and identifies important trends for the future. It extends the results from the survey data to the broader population that it is representative of, and discusses significant differences between application domains. The survey aims to inform both academics and practitioners, helping to avoid divergence between industry practice and academic research. The value of this research is highlighted by a study showing that the aggregate findings of the survey are not common knowledge in the real-time systems community. © 2021, The Author(s).
+ER  - 
+
+TY  - JOUR
+TI  - Multi-processor scheduling of elastic applications in compositional real-time systems
+AU  - Salman, Shaik Mohammed
+AU  - Papadopoulos, Alessandro V.
+AU  - Mubeen, Saad
+AU  - Nolte, Thomas
+PY  - 2022
+JO  - Journal of Systems Architecture
+DO  - 10.1016/j.sysarc.2021.102358
+UR  - https://doi.org/10.1016/j.sysarc.2021.102358
+AB  - Scheduling of real-time applications modelled according to the periodic and the sporadic task model under hierarchical and compositional real-time systems has been widely studied to provide temporal isolation among independent applications running on shared resources. However, for some real-time applications which are amenable to variation in their timing behaviour, usage of these tasks models can result in pessimistic solutions. The elastic task model addresses this pessimism by allowing the timing requirements of an application's tasks to be specified as a range of values instead of a single value. Although the scheduling of elastic applications on dedicated resources has received considerable attention, there is limited work on scheduling of such applications in hierarchical and compositional settings. In this paper, we evaluate different earliest deadline first scheduling algorithms to schedule elastic applications in a minimum parallelism supply form reservation on a multiprocessor system. Our evaluation indicates that the proposed approach provides performance comparable to the current state-of-art algorithms for scheduling elastic applications on dedicated processors in terms of schedulability. © 2021 The Authors
+ER  - 
+
+TY  - JOUR
+TI  - Enabling memory access isolation in real-time cloud systems using Intel's detection/regulation capabilities
+AU  - Farina, Giorgio
+AU  - Gala, Gautam
+AU  - Cinque, Marcello
+AU  - Fohler, Gerhard
+PY  - 2023
+JO  - Journal of Systems Architecture
+DO  - 10.1016/j.sysarc.2023.102848
+UR  - https://doi.org/10.1016/j.sysarc.2023.102848
+AB  - The increasing interest in adopting cloud technologies for Industry 4.0 and mixed-criticality environments is paving the way for compelling new opportunities and challenges. However, cloud deployments use multicore processors that introduce interference between co-executing applications on different cores due to contention in shared resources, such as the memory subsystem. Such interference can cause critical applications to miss their deadlines. To enable the co-execution of critical and non-critical applications on the same multicore processor, we propose an approach that guarantees memory access time isolation for critical cores, while not jeopardizing the memory bandwidth of the non-critical ones. We prove the viability of our approach using Intel's resource director technology for memory access detection and regulation. Experiments show that queue occupancy is an excellent metric to estimate the number of interfering cores co-accessing the memory. We also assess the indirect memory bandwidth limitation achievable by applying Intel's Memory Bandwidth Allocation technology. © 2023 Elsevier B.V.
+ER  - 
+
+TY  - JOUR
+TI  - Survey on Periodic Scheduling for Time-Triggered Hard Real-Time Systems
+AU  - Minaeva, Anna
+AU  - Hanzálek, Zdenek
+PY  - 2022
+JO  - ACM Computing Surveys
+DO  - 10.1145/3431232
+UR  - https://doi.org/10.1145/3431232
+AB  - This survey covers the basic principles and related works addressing the time-Triggered scheduling of periodic tasks with deadlines. The wide range of applications and the increasing complexity of modern real-Time systems result in the continually growing interest in this topic. However, the articles in this field appear without systematic notation. To address it, we extend the three-field Graham notation to cover periodic scheduling. Moreover, we formally define three example periodic scheduling problems (PSPs) and provide straightforward implementations of these examples in the Satisfiability Modulo Theories formalism with source codes. Then, we present a summary of the complexity results containing existing polynomially solvable PSPs. We also provide an overview of simple state-of-The-Art methods and tricks to solve the PSPs efficiently in terms of time. Next, we survey the existing works on PSP according to the resource environment: scheduling on a single resource, on parallel identical resources, and on dedicated resources. In the survey, we indicate which works propose solution methods for more general PSPs. Finally, we present related problems that are not periodic by nature to provide inspiration for the PSP solution. © 2021 ACM.
+ER  - 
+
+TY  - JOUR
+TI  - Build real-time communication for hybrid dual-OS system
+AU  - Dong, Pan
+AU  - Jiang, Zhe
+AU  - Burns, Alan
+AU  - Ding, Yan
+AU  - Ma, Jun
+PY  - 2020
+JO  - Journal of Systems Architecture
+DO  - 10.1016/j.sysarc.2020.101774
+UR  - https://doi.org/10.1016/j.sysarc.2020.101774
+AB  - In automotive/avionic/robot systems, consolidating multiple domains on a powerful SoC is an important trend. From the perspectives of safety and security, each of these domains must execute independently with a self-governed Operating System (OS). Such systems are termed as hybrid multi-OS systems. Generally, in a commonly used hybrid dual-OS system, a real-time OS (RTOS) and a general-purpose OS (GPOS) are integrated to satisfy different requirements. Inter-OS communication is the key to such systems. Specifically, services are often requested by tasks in RTOS from GPOS, but it is challenging to satisfy the requirements on time efficiency and predictability in RTOS, due to the uncertainty in communication maintenance and the time-sharing policy of the GPOS. Current existing approaches can not provide predictable time guarantees to the circumstances. This paper aims to build a time predictable and secure RPC mechanism (i.e., the primary and critical communication unit in a hybrid multi-OS system). On the foundation of a detailed analysis of the time delays in each phase of a RPC from RTOS to GPOS, we point out the drawbacks in conventional RPC mechanisms and propose an effective model and some methods to guarantee the predictability in all the phases of RPC. Furthermore, a real-time RPC scheme (termed RTRG-RPC) is proposed and applied to our ready-built TrustZone-based consolidation system (i.e., TZDKS). RTRG-RPC achieves accurate time control through three mechanisms: SGI (Software Generate Interrupt) message transforming, interrupt handler RPC servicing, and priority-swapping. Evaluations show that RTRG-RPC can achieve real-time predictability and managed priority inversion. Moreover, the design of RTRG-RPC also provides lightweight and essential protection on the security, without violation of the efficiency. © 2020
+ER  - 
+
+TY  - JOUR
+TI  - Timerlat: Real-Time Linux Scheduling Latency Measurements, Tracing, and Analysis
+AU  - De Oliveira, Daniel Bristot
+AU  - Casini, Daniel
+AU  - Lelli, Juri
+AU  - Cucinotta, Tommaso
+PY  - 2025
+JO  - IEEE Transactions on Computers
+DO  - 10.1109/TC.2025.3566908
+UR  - https://doi.org/10.1109/TC.2025.3566908
+AB  - A trend in many embedded devices is the move from hardware-based to software-defined, such as software-defined networks and software-defined PLCs. This trend is motivated by multiple aspects, including the availability of complex software stacks and the consolidation of multiple devices into a single larger system. Due to its real-time capabilities and flexibility, Linux is the operating system of choice for many applications, including time-sensitive ones. However, assessing and debugging timing violations, especially those caused by scheduling latency, is challenging with the current state-of-the-art tools. This paper presents timerlat, a tool that integrates scheduling latency measurements, tracing, and analysis in an easy-to-use interface. Its output includes an auto-analysis, providing insightful details on the composition of the scheduling latency. Experimental results are reported, evaluating the effectiveness of timerlat in assessing the latencies, considering different setups and workloads. © 1968-2012 IEEE.
+ER  - 
+
+TY  - JOUR
+TI  - A framework for static analysis and verification of low-level RTOS code
+AU  - Manjunath, Vignesh
+AU  - Baunach, Marcel
+PY  - 2024
+JO  - Journal of Systems Architecture
+DO  - 10.1016/j.sysarc.2024.103220
+UR  - https://doi.org/10.1016/j.sysarc.2024.103220
+ER  - 
+
+TY  - JOUR
+TI  - Schedulability analysis of dynamic priority real-time systems with contention
+AU  - Guasque, Ana
+AU  - Aceituno, José María
+AU  - Balbastre, Patricia
+AU  - Simó, José
+AU  - Crespo, Alfons
+PY  - 2022
+JO  - The Journal of Supercomputing
+DO  - 10.1007/s11227-022-04446-y
+UR  - https://doi.org/10.1007/s11227-022-04446-y
+ER  - 
+
