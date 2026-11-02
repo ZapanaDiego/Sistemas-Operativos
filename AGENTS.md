@@ -115,6 +115,8 @@ Quedan **27 días** al 2026-11-02. El plan de cierre está en §7.7.
 
 ## 3. Definición del proyecto: el fallo del RTOS de Mars Pathfinder
 
+> **CAMBIO DE ALCANCE (2026-11-02):** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00). El artículo y el motor de simulación S0–S5 quedan **archivados**; el equipo asumió explícitamente el riesgo académico. La definición de §3.1–§3.9 se conserva como base factual del film. Ver `simulacion3D/AGENTS.md` y §8.1.
+
 ### 3.1. Objetivo general
 
 Diseñar, implementar y documentar una **simulación de eventos discretos** que reproduzca el fallo del RTOS VxWorks del módulo de aterrizaje Mars Pathfinder —una inversión de prioridades no acotada en el mutex interno de `select()`— y analizar, con evidencia primaria y un contrafactual, **por qué falló, cómo falló y cómo se corrigió**.
@@ -151,14 +153,13 @@ Los diez artículos **no son el objeto**: son el estado del arte que enmarca el 
 
 ### 3.8. Productos entregables
 
-Artículo IEEE, simulación reproducible (`sim/`), presentación (`slides/`), ZIP de los diez papers, `AGENTS.md` actualizado y repositorio Git con historial.
+**Activo (2026-11-02):** film 3D en `simulacion3D/` (MP4 1080p, 2:45–3:00), demo C en `demo/` y slides para la exposición. **Archivados:** artículo IEEE, motor S0–S5 y ZIP de los diez papers (este último se conserva como entregable oficial).
 
 ### 3.9. Criterios de éxito
 
-- S1 reproduce al menos un reinicio; S2 y S3 no producen reinicios.
-- El artículo responde RQ1–RQ3 con evidencia trazable.
-- 5–10 páginas de texto y 10 papers citados y verificados.
-- Simulación reproducible con un comando y resultados en `sim/out/`.
+**Activos (film):** MP4 1080p de 2:45–3:00; cadena causal comprensible sin texto; demo C reproduce reset y corrección; storyboard con fuentes por plano.
+
+**Archivados:** S1–S3, respuestas RQ1–RQ3, 5–10 páginas y 10 papers citados.
 
 ---
 
@@ -572,6 +573,8 @@ texcount -inc -sub=none main.tex
 
 ## 6. Diseño del artículo
 
+> **ARCHIVADO (2026-11-02):** el artículo no es un entregable activo. Este apartado se conserva como referencia por si se retoma. El trabajo activo es el film 3D en `simulacion3D/`.
+
 ### 6.1. Título y tesis
 
 **Título:** *Inversión de prioridades en el RTOS de Mars Pathfinder: por qué falló, cómo falló y cómo se corrigió.*
@@ -633,6 +636,8 @@ texcount -inc -sub=none main.tex
 ---
 
 ## 7. Diseño de la simulación
+
+> **ARCHIVADO (2026-11-02):** el motor S0–S5 no es un entregable activo. La reproducción ejecutable del mecanismo se hará en `demo/` (C11) y el film en `simulacion3D/`. Este apartado se conserva como referencia.
 
 ### 7.1. Qué se simula y qué no
 
@@ -717,16 +722,19 @@ sim/
 
 **Actualización 2026-11-02 (OpenCode / DeepSeek V4.1 Flash):**
 
-- **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + simulación.
-- **Mapa de fuentes:** §4.6 completado con 16 fichas (10 papers + 2 Reeves + NASA + NSSDC + AP + docx), prioridades 1–5, anclas verificadas y matriz de cobertura.
-- **Fase actual:** Fase 1 (definición) **completada**; Fase 2 (corpus) **completada** salvo bibliografía base y exportación Scopus única; Fase 3 (simulación) **pendiente**.
-- **Próximo hito:** implementar `sim/model.py` y reproducir S1 (inversión + reset).
-- **Bloqueos:** bibliografía base ausente; 2 EID fuera del CSV de Scopus; figura de VOSviewer inconsistente; `references.bib` vacío.
-- **Plantilla:** `main.tex` compila en **2 páginas** (carátula + esqueleto), **0 palabras de cuerpo**, según la última compilación del 2026-10-30.
-- **Git:** repositorio inicializado el 2026-11-02; primer commit de referencia en §8.3.
-- **Riesgo principal:** 27 días para la entrega final; la simulación es la ruta crítica.
+- **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + reconstrucción visual.
+- **Cambio de alcance:** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00, 1080p, 24 fps). El artículo y el motor S0–S5 quedan **archivados**; el equipo asumió el riesgo académico (artículo 0/7). Ver `simulacion3D/AGENTS.md`.
+- **Mapa de fuentes:** §4.6 se conserva como base factual del film (16 fichas con anclas verificadas).
+- **Fase actual:** preproducción del film; contrato local creado.
+- **Próximo hito:** `simulacion3D/STORYBOARD.md` + animatic de 15–20 s en Blender.
+- **Bloqueos:** ninguno para el film. La bibliografía base y la exportación Scopus ya no bloquean el alcance activo.
+- **Plantilla:** `main.tex` queda archivado (2 páginas, 0 palabras de cuerpo).
+- **Git:** repositorio con historial; el nuevo directorio se registra en §8.3 y §8.4.
+- **Riesgo principal:** tiempo de render y claridad del film sin texto; riesgo académico asumido por ausencia de artículo.
 
 ### 8.2. Checklists
+
+> **Nota 2026-11-02:** las fases 3 y 4 (simulación y redacción del artículo) quedan **archivadas** por el cambio de alcance. La Fase 5 (exposición) sigue vigente, con el film como pieza central. La fase activa es la **Fase 6 — Film 3D**.
 
 #### Fase 0 — Reset y plantilla (completada)
 - [x] Eliminación del desarrollo FreeRTOS/IoT y auxiliares.
@@ -768,16 +776,30 @@ sim/
 - [ ] Resumen y keywords.
 - [ ] Verificación de 5–10 páginas (`make count`).
 
-#### Fase 5 — Presentación (pendiente)
+#### Fase 5 — Presentación (adaptada: exposición con el film)
 - [ ] Slides en PDF.
 - [ ] Guion de 10 minutos y banco de preguntas.
 - [ ] Ensayo de los 5 indicadores de coevaluación.
 - [ ] ZIP final y entrega del 29/11.
 
+#### Fase 6 — Film 3D (activa)
+- [x] Crear `simulacion3D/AGENTS.md` con el contrato local.
+- [ ] Escribir `simulacion3D/STORYBOARD.md` con los 15 planos.
+- [ ] Escribir `simulacion3D/NARRACION.md`.
+- [ ] Construir animatic de 15–20 s.
+- [ ] Modelar terreno, lander, rover y ciudad de tareas.
+- [ ] Animar los 15 planos.
+- [ ] Generar texturas de código/terminal desde `demo/`.
+- [ ] Render de prueba y medición de tiempo.
+- [ ] Draft 720p.
+- [ ] Render final 1080p y MP4.
+- [ ] Actualizar `AGENTS.md` global y hacer commit.
+
 ### 8.3. Bitácora
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Creación del contrato local del film 3D y registro del cambio de alcance a "solo film" (artículo y motor S0–S5 archivados; riesgo académico asumido). | `ls -la simulacion3D`; contrato revisado; §3, §6, §7, §8.1, §8.2 y §8.4 actualizados. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Añadido §4.6 *Mapa de explotación del corpus*: escala 1–5, tabla maestra de 16 fuentes, fichas detalladas con anclas de página, matriz de cobertura por sección, huecos y regla de uso. | Anclas verificadas con `pdftotext` y `pdfinfo`; 16 fichas; matriz de cobertura; `./build.sh` sin cambios. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md`, `docs/HISTORIAL.md`, `.gitignore`, `.git/`; eliminado `fuentes/analisis_bibliografico/Untitled Document` | Reestructuración de `AGENTS.md` en §0–§9: regla R0, definición del proyecto, corpus verificado, diseño del artículo, diseño de la simulación, inventario y protocolo. Historial anterior movido a `docs/HISTORIAL.md`. Repositorio Git inicializado (commit `b416dbd`) y eliminado archivo basura de 1 byte. | `AGENTS.md` con 9 secciones y referencias internas coherentes; `docs/HISTORIAL.md` con la tabla histórica; `./build.sh` sin errores; `main.pdf` = 2 páginas; `texcount` = 0 palabras de cuerpo. |
 | **2026-10-31** | Codex | `fuentes/` | Descarga y lectura de las dos cuentas de Glenn E. Reeves (1997 y 1999); separadas del corpus Q1/Q2 por ser anteriores a 2020. | Fuentes locales verificadas. |
@@ -793,9 +815,9 @@ sim/
 | :--- | :--- | :--- | :--- | :--- |
 | `AGENTS.md` | Documento maestro | Reglas, definición, estado y mapa de fuentes | Activo; incluye §4.6 | 2026-11-02 · OpenCode |
 | `docs/HISTORIAL.md` | Archivo | Bitácora anterior | Activo | 2026-11-02 · OpenCode |
-| `main.tex` | LaTeX | Carátula + artículo | Esqueleto | 2026-10-30 · OpenCode |
-| `main.pdf` | PDF generado | Compilación de verificación | 2 páginas, 0 palabras de cuerpo | 2026-11-02 · OpenCode |
-| `references.bib` | BibTeX | Citas | Vacío | 2026-10-30 · OpenCode |
+| `main.tex` | LaTeX | Carátula + artículo | Archivado (alcance solo film) | 2026-10-30 · OpenCode |
+| `main.pdf` | PDF generado | Compilación de verificación | Archivado; 2 páginas | 2026-11-02 · OpenCode |
+| `references.bib` | BibTeX | Citas | Archivado; vacío | 2026-10-30 · OpenCode |
 | `IEEEtran.cls` / `.bst` | Clase/estilo | Formato IEEE | Estable | 2026-10-11 |
 | `build.sh` / `Makefile` | Scripts | Compilación y conteo | Estable | 2026-10-30 |
 | `img/logoLaSalleUniversidad.png` | Imagen | Logo de carátula | Estable | 2026-10-11 |
@@ -809,8 +831,10 @@ sim/
 | `fuentes/analisis_bibliografico/Referencias_Rtos.bib` | BibTeX | Borrador de citas | Parcial | 2026-10-31 |
 | `fuentes/analisis_bibliografico/Referencias_Mendeley.ris` | RIS | Importación Mendeley | Completo | 2026-10-31 |
 | `fuentes/analisis_bibliografico/VOSviewer_*` | Datos | Mapa bibliométrico | **Inconsistente** | 2026-10-31 |
-| `sim/` | Código | Simulación | **Planificado** | — |
-| `slides/` | Presentación | Slides | **Planificado** | — |
+| `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
+| `demo/` | Código | Demo C determinista para el film (PIP off/on) | **Planificado** | — |
+| `simulacion3D/AGENTS.md` | Documento | Contrato local del film 3D: alcance, storyboard, pipeline y R0 | Activo | 2026-11-02 · OpenCode |
+| `slides/` | Presentación | Slides de la exposición | Pendiente (exposición) | — |
 | `.gitignore` | Git | Exclusiones | Activo | 2026-11-02 · OpenCode |
 
 ---
