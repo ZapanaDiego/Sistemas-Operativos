@@ -498,7 +498,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
-| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md`, `docs/HISTORIAL.md`, `.gitignore`, `.git/` | Reestructuración de `AGENTS.md` en §0–§9: regla R0, definición del proyecto, corpus verificado, diseño del artículo, diseño de la simulación, inventario y protocolo. Historial anterior movido a `docs/HISTORIAL.md`. Repositorio Git inicializado. | `AGENTS.md` con 9 secciones y referencias internas coherentes; `docs/HISTORIAL.md` con la tabla histórica; `git log` con el commit inicial; `./build.sh` sin errores. |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md`, `docs/HISTORIAL.md`, `.gitignore`, `.git/`; eliminado `fuentes/analisis_bibliografico/Untitled Document` | Reestructuración de `AGENTS.md` en §0–§9: regla R0, definición del proyecto, corpus verificado, diseño del artículo, diseño de la simulación, inventario y protocolo. Historial anterior movido a `docs/HISTORIAL.md`. Repositorio Git inicializado (commit `b416dbd`) y eliminado archivo basura de 1 byte. | `AGENTS.md` con 9 secciones y referencias internas coherentes; `docs/HISTORIAL.md` con la tabla histórica; `./build.sh` sin errores; `main.pdf` = 2 páginas; `texcount` = 0 palabras de cuerpo. |
 | **2026-10-31** | Codex | `fuentes/` | Descarga y lectura de las dos cuentas de Glenn E. Reeves (1997 y 1999); separadas del corpus Q1/Q2 por ser anteriores a 2020. | Fuentes locales verificadas. |
 | **2026-10-31** | Codex | `fuentes/analisis_bibliografico/` | Cierre de trazabilidad: EID de Manjunath y Guasque; actualización de matriz; VOSviewer y RIS preparados. | 8/10 en CSV; 2 EID externos. |
 | **2026-10-31** | Codex | `fuentes/`, `fuentes/analisis_bibliografico/` | Recopilación de 10 PDFs 2020–2025, matriz, ZIP, RIS/BibTeX y datos VOSviewer. | ZIP con 10 artículos; PDFs completos. |
@@ -513,6 +513,7 @@ sim/
 | `AGENTS.md` | Documento maestro | Reglas, definición y estado | Activo | 2026-11-02 · OpenCode |
 | `docs/HISTORIAL.md` | Archivo | Bitácora anterior | Activo | 2026-11-02 · OpenCode |
 | `main.tex` | LaTeX | Carátula + artículo | Esqueleto | 2026-10-30 · OpenCode |
+| `main.pdf` | PDF generado | Compilación de verificación | 2 páginas, 0 palabras de cuerpo | 2026-11-02 · OpenCode |
 | `references.bib` | BibTeX | Citas | Vacío | 2026-10-30 · OpenCode |
 | `IEEEtran.cls` / `.bst` | Clase/estilo | Formato IEEE | Estable | 2026-10-11 |
 | `build.sh` / `Makefile` | Scripts | Compilación y conteo | Estable | 2026-10-30 |
