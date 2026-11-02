@@ -153,7 +153,7 @@ Los diez artículos **no son el objeto**: son el estado del arte que enmarca el 
 
 ### 3.8. Productos entregables
 
-**Activo (2026-11-02):** film 3D en `simulacion3D/` (MP4 1080p, 2:45–3:00), demo C en `demo/` y slides para la exposición. **Archivados:** artículo IEEE, motor S0–S5 y ZIP de los diez papers (este último se conserva como entregable oficial).
+**Activo (2026-11-02):** film 3D en `simulacion3D/` (MP4 1080p, 2:45–3:00), entorno RTOS en `entornoRTOS/` y slides para la exposición. **Archivados:** artículo IEEE, motor S0–S5 y ZIP de los diez papers (este último se conserva como entregable oficial).
 
 ### 3.9. Criterios de éxito
 
@@ -637,7 +637,7 @@ texcount -inc -sub=none main.tex
 
 ## 7. Diseño de la simulación
 
-> **ARCHIVADO (2026-11-02):** el motor S0–S5 no es un entregable activo. La reproducción ejecutable del mecanismo se hará en `demo/` (C11) y el film en `simulacion3D/`. Este apartado se conserva como referencia.
+> **ARCHIVADO (2026-11-02):** el motor S0–S5 no es un entregable activo. La reproducción ejecutable del mecanismo se implementó en `entornoRTOS/` (C11) y el film en `simulacion3D/`. Este apartado se conserva como referencia.
 
 ### 7.1. Qué se simula y qué no
 
@@ -725,9 +725,9 @@ sim/
 - **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + reconstrucción visual.
 - **Cambio de alcance:** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00, 1080p, 24 fps). El artículo y el motor S0–S5 quedan **archivados**; el equipo asumió el riesgo académico (artículo 0/7). Ver `simulacion3D/AGENTS.md`.
 - **Mapa de fuentes:** §4.6 se conserva como base factual del film (16 fichas con anclas verificadas).
-- **Fase actual:** preproducción del film; contrato local creado.
-- **Próximo hito:** `simulacion3D/STORYBOARD.md` + animatic de 15–20 s en Blender.
-- **Bloqueos:** ninguno para el film. La bibliografía base y la exportación Scopus ya no bloquean el alcance activo.
+- **Fase actual:** film en preproducción; entorno RTOS implementado y verificado (`make test` PASS).
+- **Próximo hito:** `simulacion3D/STORYBOARD.md` + animatic de 15–20 s; luego texturas de código/terminal desde `entornoRTOS/out/`.
+- **Bloqueos:** ninguno.
 - **Plantilla:** `main.tex` queda archivado (2 páginas, 0 palabras de cuerpo).
 - **Git:** repositorio con historial; el nuevo directorio se registra en §8.3 y §8.4.
 - **Riesgo principal:** tiempo de render y claridad del film sin texto; riesgo académico asumido por ausencia de artículo.
@@ -784,12 +784,13 @@ sim/
 
 #### Fase 6 — Film 3D (activa)
 - [x] Crear `simulacion3D/AGENTS.md` con el contrato local.
+- [x] Implementar `entornoRTOS/` y verificar S0–S3 con `make test`.
 - [ ] Escribir `simulacion3D/STORYBOARD.md` con los 15 planos.
 - [ ] Escribir `simulacion3D/NARRACION.md`.
 - [ ] Construir animatic de 15–20 s.
 - [ ] Modelar terreno, lander, rover y ciudad de tareas.
 - [ ] Animar los 15 planos.
-- [ ] Generar texturas de código/terminal desde `demo/`.
+- [ ] Generar texturas de código/terminal desde `entornoRTOS/`.
 - [ ] Render de prueba y medición de tiempo.
 - [ ] Draft 720p.
 - [ ] Render final 1080p y MP4.
@@ -799,6 +800,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/`, `simulacion3D/AGENTS.md`, `AGENTS.md` | Implementado el entorno RTOS determinista en C11 (`ucontext`), mutex con/sin PIP, `select()`, software de vuelo y pruebas S0–S3; `make test` PASS; actualizadas las referencias `../demo/` → `../entornoRTOS/`. | `make test`: S0 0, S1 3, S2 0, S3 0; trazas deterministas; `run-pip-off` RESET; `run-pip-on` OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Ampliado el contrato local con la secuencia completa del film (15 planos detallados), guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l` = 803; 15 planos; tablas y secciones revisadas; `AGENTS.md` global sincronizado. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Creación del contrato local del film 3D y registro del cambio de alcance a "solo film" (artículo y motor S0–S5 archivados; riesgo académico asumido). | `ls -la simulacion3D`; contrato revisado; §3, §6, §7, §8.1, §8.2 y §8.4 actualizados. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Añadido §4.6 *Mapa de explotación del corpus*: escala 1–5, tabla maestra de 16 fuentes, fichas detalladas con anclas de página, matriz de cobertura por sección, huecos y regla de uso. | Anclas verificadas con `pdftotext` y `pdfinfo`; 16 fichas; matriz de cobertura; `./build.sh` sin cambios. |
@@ -833,7 +835,8 @@ sim/
 | `fuentes/analisis_bibliografico/Referencias_Mendeley.ris` | RIS | Importación Mendeley | Completo | 2026-10-31 |
 | `fuentes/analisis_bibliografico/VOSviewer_*` | Datos | Mapa bibliométrico | **Inconsistente** | 2026-10-31 |
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
-| `demo/` | Código | Demo C determinista para el film (PIP off/on) | **Planificado** | — |
+| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo** | 2026-11-02 · OpenCode |
+| `entornoRTOS/AGENTS.md` | Documento | Contrato local del entorno RTOS | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo | 2026-11-02 · OpenCode |
 | `slides/` | Presentación | Slides de la exposición | Pendiente (exposición) | — |
 | `.gitignore` | Git | Exclusiones | Activo | 2026-11-02 · OpenCode |

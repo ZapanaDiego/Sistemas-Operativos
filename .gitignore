@@ -16,6 +16,13 @@ __pycache__/
 .venv/
 venv/
 
+# entornoRTOS (build)
+entornoRTOS/*.o
+entornoRTOS/src/*.o
+entornoRTOS/tests/*.o
+entornoRTOS/entornoRTOS
+entornoRTOS/test_signatures
+
 # Sistema
 .DS_Store
 Thumbs.db

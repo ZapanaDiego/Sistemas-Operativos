@@ -24,7 +24,7 @@ Si el disco contradice este documento, prevalece el disco y se corrige el docume
 - **Fase:** preproducción; contrato completo.
 - **Entregable único:** `out/pathfinder_failure.mp4`.
 - **Próximo hito:** `STORYBOARD.md` derivado + animatic de 15–20 s.
-- **Bloqueos:** el demo C (`../demo/`) aún no existe; es necesario para los planos 11–12.
+- **Bloqueos:** ninguno; `../entornoRTOS/` ya reproduce S1/S2 y genera las trazas para los planos 11–12.
 - **Riesgo principal:** tiempo de render y claridad del film sin texto.
 - **Alcance:** solo el film. El artículo, el motor S0–S5 y el demo C viven fuera de este directorio.
 
@@ -490,8 +490,8 @@ tareas medias → libera el mutex → bc_dist termina → no hay reset
 
 - Fuente monoespaciada DejaVu Sans Mono.
 - Fondo `#0B0F14`; ámbar `#FFB000`; verde `#33FF77`; rojo `#FF3B30`.
-- El código se genera desde `../demo/src/` y `../demo/include/`; no se inventa.
-- La terminal se genera desde `../demo/out/pip_off.txt` y `pip_on.txt`.
+- El código se genera desde `../entornoRTOS/src/` y `../entornoRTOS/include/`; no se inventa.
+- La terminal se genera desde `../entornoRTOS/out/pip_off.txt` y `pip_on.txt`.
 - Los paneles son holográficos, pero el texto debe ser nítido y legible.
 
 ### 6.6. Escala y unidades
@@ -650,16 +650,16 @@ ffprobe -v error -show_entries format=duration,size \
 
 ## 9. Integración del demo C
 
-El demo C vive fuera de este directorio, en `../demo/`. Es la evidencia
+El demo C vive fuera de este directorio, en `../entornoRTOS/`. Es la evidencia
 ejecutable del plano 12 y la fuente del código del plano 11.
 
-### 9.1. Contrato esperado de `../demo/`
+### 9.1. Contrato esperado de `../entornoRTOS/`
 
 - `make test`: verifica S0/S1/S2/S3 (S1 reset, S2 OK).
 - `make run-pip-off`: imprime la traza y `WATCHDOG: RESET`.
 - `make run-pip-on`: imprime la traza y `OK`.
-- Salidas: `../demo/out/pip_off.txt`, `../demo/out/pip_on.txt`.
-- Código: `../demo/src/flight_sw.c`, `../demo/include/vxworks_like.h`.
+- Salidas: `../entornoRTOS/out/pip_off.txt`, `../entornoRTOS/out/pip_on.txt`.
+- Código: `../entornoRTOS/src/flight_sw.c`, `../entornoRTOS/include/vxworks_like.h`.
 
 ### 9.2. Generación de texturas
 
@@ -693,6 +693,7 @@ ejecutable del patrón". La narración en vivo lo aclara.
 
 | Fecha | Agente | Archivos | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Actualizadas las referencias `../demo/` → `../entornoRTOS/`; desbloqueado el demo C para los planos 11–12. | `grep` sin `../demo/`; `../entornoRTOS/make test` PASS. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Ampliación con la secuencia completa de 15 planos, guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l`; 15 planos; tablas y secciones revisadas. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Creación del contrato local de `simulacion3D/` con alcance, storyboard, pipeline y R0. | Archivo creado; `ls -la simulacion3D`. |
 
@@ -781,7 +782,7 @@ ejecutable del patrón". La narración en vivo lo aclara.
 ## 15. Protocolo para agentes
 
 1. Leer este archivo y `../AGENTS.md` antes de tocar nada.
-2. No modificar `../main.tex`, `../references.bib`, `../fuentes/` ni `../demo/`
+2. No modificar `../main.tex`, `../references.bib`, `../fuentes/` ni `../entornoRTOS/`
    salvo que la tarea lo requiera.
 3. No añadir audio ni texto no previsto.
 4. Usar semilla fija y rutas relativas.
@@ -799,5 +800,5 @@ ejecutable del patrón". La narración en vivo lo aclara.
 3. Construir un animatic de 15–20 s: terreno, silueta del lander, cámara que
    se acerca, ciudad de tareas y cerrojo.
 4. Renderizar a 720p con pocas muestras y revisar el lenguaje visual.
-5. Construir `../demo/` y verificar `make test`.
+5. Construir `../entornoRTOS/` y verificar `make test`.
 6. Solo después, modelar el lander en detalle.
