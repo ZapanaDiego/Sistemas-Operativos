@@ -2,8 +2,14 @@
 out/frames/**/*.png
 out/frames/**/*.jpg
 out/spike/*.png
+out/preview/
+out/verify/
+out/animatic/frames/
+out/animatic/test_frame*.png
 out/draft/
 out/*.mp4
+!out/animatic.mp4
+!out/pathfinder_failure.mp4
 
 # Blender
 blender/*.blend1

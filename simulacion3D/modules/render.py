@@ -27,6 +27,7 @@ def setup_render(
     draft: bool = False,
     samples: int | None = None,
     bloom: bool = True,
+    motion_blur: bool = True,
 ) -> None:
     """Configura EEVEE, resolución, fps y salida PNG del contrato."""
     scene.render.engine = "BLENDER_EEVEE"
@@ -37,7 +38,7 @@ def setup_render(
     scene.render.fps = FPS
     scene.render.fps_base = 1.0
     scene.render.film_transparent = False
-    scene.render.use_motion_blur = True
+    scene.render.use_motion_blur = motion_blur
     scene.render.motion_blur_shutter = 0.5
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGB"

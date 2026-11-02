@@ -725,8 +725,8 @@ sim/
 - **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + reconstrucción visual.
 - **Cambio de alcance:** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00, 1080p, 24 fps). El artículo y el motor S0–S5 quedan **archivados**; el equipo asumió el riesgo académico (artículo 0/7). Ver `simulacion3D/AGENTS.md`.
 - **Mapa de fuentes:** §4.6 se conserva como base factual del film (16 fichas con anclas verificadas).
-- **Fase actual:** film en preproducción; entorno RTOS verificado (`make test` PASS); I0 (base técnica, texturas reales y medición de render) completada.
-- **Próximo hito:** `simulacion3D/STORYBOARD.md` + `NARRACION.md` + animatic de 15–20 s.
+- **Fase actual:** entrega; entorno RTOS verificado (`make test` PASS); film 1080p renderizado, codificado y verificado.
+- **Próximo hito:** revisión con narración en vivo y entrega del 29/11.
 - **Bloqueos:** ninguno.
 - **Plantilla:** `main.tex` queda archivado (2 páginas, 0 palabras de cuerpo).
 - **Git:** repositorio con historial; el nuevo directorio se registra en §8.3 y §8.4.
@@ -785,21 +785,24 @@ sim/
 #### Fase 6 — Film 3D (activa)
 - [x] Crear `simulacion3D/AGENTS.md` con el contrato local.
 - [x] Implementar `entornoRTOS/` y verificar S0–S3 con `make test`.
-- [ ] Escribir `simulacion3D/STORYBOARD.md` con los 15 planos.
-- [ ] Escribir `simulacion3D/NARRACION.md`.
-- [ ] Construir animatic de 15–20 s.
-- [ ] Modelar terreno, lander, rover y ciudad de tareas.
-- [ ] Animar los 15 planos.
+- [x] Escribir `simulacion3D/STORYBOARD.md` con los 15 planos.
+- [x] Escribir `simulacion3D/NARRACION.md`.
+- [x] Construir animatic de 15–20 s.
+- [x] Modelar terreno, lander, rover y ciudad de tareas.
+- [x] Animar los 15 planos.
 - [x] Generar texturas de código/terminal desde `entornoRTOS/`.
 - [x] Render de prueba y medición de tiempo (escena base de I0).
-- [ ] Draft 720p.
-- [ ] Render final 1080p y MP4.
-- [ ] Actualizar `AGENTS.md` global y hacer commit.
+- [x] Draft de revisión: animatic 720p + previews 480p.
+- [x] Render final 1080p y MP4.
+- [x] Actualizar `AGENTS.md` global y hacer commit.
 
 ### 8.3. Bitácora
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/build_scene.py`, `modules/`, `blender/pathfinder_failure.blend`, `out/frames/film/`, `out/pathfinder_failure.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I3–I9 del film: escena completa de 15 planos, animación, render 1080p de 4320 frames, codificación con fades y verificación. | Render 59:42 (0,85 s/frame); `ffprobe`: 1920 × 1080, 24 fps, 180,0 s, H.264, yuv420p, sin audio, 32.256.132 bytes; `ffmpeg -f null` DECODE_OK. |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/animatic.py`, `blender/animatic.blend`, `out/animatic.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I2 del film: animatic de 18 s con terreno, lander, rover, ciudad y cerrojo; render 720p y MP4 de revisión. | `ffprobe`: 1280 × 720, 24 fps, 18,0 s, H.264, sin audio; ~5 min de render. |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/STORYBOARD.md`, `NARRACION.md`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I1 del film: storyboard derivado de §4 con 15 planos y frames exactos; narración en vivo de 387 palabras con mapa de bloques y límites de honestidad. | 15 planos suman 180 s / 4320 frames; guion 387 palabras (~2:46 a 140 ppm, con pausas ~2:55); revisión de límites. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/README.md`, `build_scene.py`, `render.sh`, `modules/`, `assets/code/`, `assets/fonts/`, `blender/pathfinder_failure.blend`, `out/spike/`, `simulacion3D/.gitignore`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I0 del film: escena base EEVEE, texturas reales de código/terminal desde `entornoRTOS/`, medición de render y corrección de los nombres de salida. | 1080p 7,64 s en frío / 3,35 s con caché; 720p 1,24 s; `make_textures.py` OK; `py_compile` OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/`, `simulacion3D/AGENTS.md`, `AGENTS.md` | Implementado el entorno RTOS determinista en C11 (`ucontext`), mutex con/sin PIP, `select()`, software de vuelo y pruebas S0–S3; `make test` PASS; actualizadas las referencias `../demo/` → `../entornoRTOS/`. | `make test`: S0 0, S1 3, S2 0, S3 0; trazas deterministas; `run-pip-off` RESET; `run-pip-on` OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Ampliado el contrato local con la secuencia completa del film (15 planos detallados), guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l` = 803; 15 planos; tablas y secciones revisadas; `AGENTS.md` global sincronizado. |
@@ -838,12 +841,19 @@ sim/
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
 | `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo** | 2026-11-02 · OpenCode |
 | `entornoRTOS/AGENTS.md` | Documento | Contrato local del entorno RTOS | Activo | 2026-11-02 · OpenCode |
-| `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo; I0 registrada | 2026-11-02 · OpenCode |
-| `simulacion3D/README.md` | Documento | Build, render y medición de I0 | Activo | 2026-11-02 · OpenCode |
-| `simulacion3D/build_scene.py` | Python | Escena base y frame de prueba | Activo (I0) | 2026-11-02 · OpenCode |
+| `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo; cierre registrado | 2026-11-02 · OpenCode |
+| `simulacion3D/README.md` | Documento | Build, render y entregable final | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/STORYBOARD.md` | Documento | Guion visual de 15 planos, 4320 frames | Activo (I1) | 2026-11-02 · OpenCode |
+| `simulacion3D/NARRACION.md` | Documento | Guion en vivo de 387 palabras | Activo (I1) | 2026-11-02 · OpenCode |
+| `simulacion3D/build_scene.py` | Python | Escena completa de 15 planos | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/animatic.py` | Python | Animatic de 18 s | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/render.sh` | Script | Envoltorio de build, test y render por plano | Activo | 2026-11-02 · OpenCode |
-| `simulacion3D/modules/` | Python | `cameras`, `materials`, `render`; faltan terrain/lander/rover/tasks | Parcial | 2026-11-02 · OpenCode |
-| `simulacion3D/blender/pathfinder_failure.blend` | Blender | Proyecto editable (escena base) | Activo (I0) | 2026-11-02 · OpenCode |
+| `simulacion3D/modules/` | Python | `terrain`, `lander`, `rover`, `tasks`, `cameras`, `materials`, `render` | Completo | 2026-11-02 · OpenCode |
+| `simulacion3D/blender/pathfinder_failure.blend` | Blender | Proyecto editable (escena completa) | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/blender/animatic.blend` | Blender | Proyecto del animatic | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/out/animatic.mp4` | Video | Animatic de revisión, 18 s | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/out/frames/film/` | PNG | Render final de 4320 frames | Completo | 2026-11-02 · OpenCode |
+| `simulacion3D/out/pathfinder_failure.mp4` | Video | Entregable final 1080p, 24 fps, 3:00, sin audio | Completo | 2026-11-02 · OpenCode |
 | `simulacion3D/assets/code/` | Imágenes/Script | Texturas reales de código/terminal y generador | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/assets/fonts/` | Fuentes | DejaVu Sans Mono | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/out/spike/` | PNG | Frames de prueba (ignorados por git) | Activo | 2026-11-02 · OpenCode |

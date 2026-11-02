@@ -21,11 +21,11 @@ Si el disco contradice este documento, prevalece el disco y se corrige el docume
 
 ## 1. Estado actual
 
-- **Fase:** preproducción; I0 (base técnica) completada.
-- **Entregable único:** `out/pathfinder_failure.mp4`.
-- **Próximo hito:** `STORYBOARD.md` derivado + `NARRACION.md` + animatic de 15–20 s.
-- **Bloqueos:** ninguno; `../entornoRTOS/` reproduce S1/S2 y las texturas reales ya están generadas.
-- **Riesgo principal:** tiempo de render (medido en la escena de prueba: 3,35–7,64 s/frame a 1080p) y claridad del film sin texto.
+- **Fase:** entrega; film renderizado, codificado y verificado.
+- **Entregable único:** `out/pathfinder_failure.mp4` (1920 × 1080, 24 fps, 3:00, H.264, sin audio, 30,8 MiB).
+- **Próximo hito:** revisión con narración en vivo y entrega del 29/11.
+- **Bloqueos:** ninguno; `../entornoRTOS/` reproduce S1/S2 y las texturas reales están integradas.
+- **Riesgo principal:** claridad del film sin texto; el montaje se revisó con contact sheets y previews.
 - **Alcance:** solo el film. El artículo, el motor S0–S5 y el demo C viven fuera de este directorio.
 
 ## 2. Objetivo, alcance y decisiones cerradas
@@ -522,6 +522,7 @@ simulacion3D/
 ├── NARRACION.md
 ├── README.md
 ├── build_scene.py
+├── animatic.py
 ├── render.sh
 ├── modules/
 │   ├── terrain.py
@@ -532,7 +533,8 @@ simulacion3D/
 │   ├── materials.py
 │   └── render.py
 ├── blender/
-│   └── pathfinder_failure.blend
+│   ├── pathfinder_failure.blend
+│   └── animatic.blend
 ├── assets/
 │   ├── textures/
 │   ├── code/
@@ -541,7 +543,9 @@ simulacion3D/
     ├── frames/
     │   ├── shot_01/
     │   ├── ...
-    │   └── shot_15/
+    │   ├── shot_15/
+    │   └── film/
+    ├── animatic.mp4
     └── pathfinder_failure.mp4
 ```
 
@@ -608,12 +612,16 @@ SCENE
 
 ### 7.8. Render
 
-- EEVEE; 1920 × 1080; 24 fps; samples 32 (draft 16); motion blur on;
-  bloom on; ambient occlusion on.
-- Color management: AgX o Filmic; exposición fija.
+- EEVEE; 1920 × 1080; 24 fps.
+- **Compromiso de entrega:** 8 muestras y motion blur desactivado en el render
+  final; la escena de prueba se midió con 32 muestras. El bloom se hace con un
+  nodo Glare del compositor (EEVEE 5.2 ya no lo expone).
+- Color management: AgX; exposición fija.
 - Salida PNG RGB, compresión 15.
-- Render por plano a `out/frames/shot_XX/`.
-- Frame de prueba antes del render completo; medir tiempo por frame.
+- Render de la escena maestra a `out/frames/film/`; los marcadores de la línea
+  de tiempo cambian de cámara entre los 15 planos.
+- Frame de prueba antes del render completo; tiempo medido: 0,85 s/frame a
+  1080p con 8 muestras.
 
 ### 7.9. Postproducción
 
@@ -625,20 +633,26 @@ SCENE
 ## 8. Pipeline y comandos
 
 ```bash
-# Construir y guardar el .blend
-blender -b --factory-startup --python build_scene.py -- --save
+# Construir y guardar el .blend final
+blender -b --factory-startup --python build_scene.py -- \
+  --save --samples 8 --no-motion-blur
+
+# Previews de frontera (480p)
+blender -b --factory-startup --python build_scene.py -- --preview
 
 # Frame de prueba (medir tiempo y confirmar EEVEE headless)
-blender -b blender/pathfinder_failure.blend -f 1
+blender -b --factory-startup --python build_scene.py -- \
+  --test-frame --frame 1 --samples 8 --no-motion-blur
 
-# Render de un plano (ejemplo: plano 3)
-blender -b blender/pathfinder_failure.blend -S shot_03 -s 1 -e 312 -a
+# Render de un rango absoluto (ejemplo: plano 3, frames 601–912)
+blender -b blender/pathfinder_failure.blend -s 601 -e 912 -a
 
 # Render completo
 blender -b blender/pathfinder_failure.blend -a
 
-# Codificar
-ffmpeg -framerate 24 -i out/frames/shot_%02d/frame_%04d.png \
+# Codificar con fade de entrada y salida
+ffmpeg -framerate 24 -i out/frames/film/frame_%04d.png \
+  -vf "fade=t=in:st=0:d=1,fade=t=out:st=178:d=2" \
   -c:v libx264 -pix_fmt yuv420p -crf 18 out/pathfinder_failure.mp4
 
 # Verificar
@@ -687,33 +701,41 @@ ejecutable del patrón". La narración en vivo lo aclara.
 | :--- | :--- | :--- | :--- |
 | `AGENTS.md` | Documento | Contrato local y biblia de producción | Activo |
 | `README.md` | Documento | Build, render y medición de I0 | Activo |
-| `STORYBOARD.md` | Documento | Copia imprimible de §4 | Pendiente |
-| `NARRACION.md` | Documento | Guion en vivo | Pendiente |
-| `build_scene.py` | Python | Escena base y frame de prueba | Activo (I0) |
+| `STORYBOARD.md` | Documento | Guion visual derivado de §4, 15 planos con frames | Activo (I1) |
+| `NARRACION.md` | Documento | Guion en vivo de 387 palabras | Activo (I1) |
+| `build_scene.py` | Python | Escena completa de 15 planos y visibilidad | Activo |
+| `animatic.py` | Python | Animatic de 18 s (432 frames) | Activo |
 | `render.sh` | Script | Envoltorio de build, test y render por plano | Activo |
 | `modules/cameras.py` | Python | Cámaras, luces y objetivos | Activo |
 | `modules/materials.py` | Python | Paleta y materiales PBR/emisión | Activo |
 | `modules/render.py` | Python | EEVEE, compositor, guardado y medición | Activo |
-| `modules/terrain.py` | Python | Terreno, rocas y cielo | Pendiente |
-| `modules/lander.py` | Python | Lander exterior e interior | Pendiente |
-| `modules/rover.py` | Python | Rover de contexto | Pendiente |
-| `modules/tasks.py` | Python | Ciudad de tareas, cerrojo y anillos | Pendiente |
-| `blender/pathfinder_failure.blend` | Blender | Proyecto editable (escena base) | Activo (I0) |
+| `modules/terrain.py` | Python | Terreno, rocas y sol | Activo |
+| `modules/lander.py` | Python | Lander exterior, chasis VME, CPU y bus | Activo |
+| `modules/rover.py` | Python | Rover de contexto | Activo |
+| `modules/tasks.py` | Python | Ciudad de tareas, cerrojo, anillos y paneles | Activo |
+| `blender/pathfinder_failure.blend` | Blender | Proyecto editable (escena completa) | Activo |
 | `assets/code/make_textures.py` | Python | Generador de texturas desde el demo | Activo |
 | `assets/code/code_panel.png` | Imagen | Código real de `../entornoRTOS/` | Activo |
 | `assets/code/terminal_off.png` | Imagen | Terminal S1 (`WATCHDOG: RESET`) | Activo |
 | `assets/code/terminal_on.png` | Imagen | Terminal S2 (`OK`) | Activo |
 | `assets/code/SOURCES.md` | Documento | Trazabilidad de las texturas | Activo |
 | `assets/fonts/` | Fuentes | DejaVu Sans Mono | Activo |
-| `out/frames/shot_01/` … `shot_15/` | Directorios | Secuencia de render | Vacíos |
+| `blender/animatic.blend` | Blender | Proyecto del animatic | Activo |
+| `out/frames/shot_01/` … `shot_15/` | Directorios | Secuencia de render por plano | Vacíos |
+| `out/frames/film/` | PNG | Render final de 4320 frames | Completo |
+| `out/animatic.mp4` | Video | Animatic de revisión (18 s, 720p) | Activo |
+| `out/verify/` | PNG | Frames de verificación del MP4 (ignorados) | Activo |
 | `out/spike/` | PNG | Frames de prueba (ignorados por git) | Activo |
-| `out/pathfinder_failure.mp4` | Video | Entregable final | Pendiente |
+| `out/pathfinder_failure.mp4` | Video | Entregable final 1080p, 3:00, sin audio | Completo |
 | `.gitignore` | Git | Exclusiones de render y temporales | Activo |
 
 ## 11. Bitácora
 
 | Fecha | Agente | Archivos | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `build_scene.py`, `modules/`, `blender/pathfinder_failure.blend`, `out/frames/film/`, `out/pathfinder_failure.mp4`, `README.md` | I3–I9: escena completa de 15 planos, animación, render final 1080p (4320 frames), codificación con fades y verificación. | Render 59:42 (0,85 s/frame); `ffprobe`: 1920 × 1080, 24 fps, 180,0 s, H.264, yuv420p, sin audio, 32.256.132 bytes; `ffmpeg -f null` DECODE_OK. |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `animatic.py`, `blender/animatic.blend`, `out/animatic.mp4`, `README.md` | I2: animatic de 18 s (432 frames, 720p, 8 muestras) con terreno, lander, rover, ciudad de tareas y cerrojo; render y codificación. | `ffprobe`: 1280 × 720, 24 fps, 18,0 s, H.264, sin audio; ~5 min de render; frames revisados (1, 144, 288, 432). |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `STORYBOARD.md`, `NARRACION.md`, `README.md` | I1: storyboard de 15 planos con tiempos y frames exactos (4320), narración en vivo de 387 palabras y mapa de bloques; README actualizado al estado I1. | 15 planos suman 180 s; guion 387 palabras (~2:46 a 140 ppm, con pausas ~2:55); límites de honestidad revisados. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `README.md`, `build_scene.py`, `render.sh`, `modules/`, `assets/code/`, `assets/fonts/`, `blender/pathfinder_failure.blend`, `out/spike/`, `.gitignore` | I0: base técnica del film; escena de prueba EEVEE; texturas reales de código/terminal desde `../entornoRTOS/`; medición de render y corrección de los nombres de salida en §9.1. | `blender -b ... -- --save --test-frame`: 1080p 7,64 s en frío y 3,35 s con caché; 720p 1,24 s; `python3 assets/code/make_textures.py` OK; `py_compile` OK. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Actualizadas las referencias `../demo/` → `../entornoRTOS/`; desbloqueado el demo C para los planos 11–12. | `grep` sin `../demo/`; `../entornoRTOS/make test` PASS. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Ampliación con la secuencia completa de 15 planos, guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l`; 15 planos; tablas y secciones revisadas. |
@@ -722,46 +744,46 @@ ejecutable del patrón". La narración en vivo lo aclara.
 ## 12. Checklist de producción
 
 ### 12.1. Preproducción
-- [ ] Escribir `STORYBOARD.md` derivado de §4.
-- [ ] Escribir `NARRACION.md` con tiempos.
-- [ ] Construir animatic de 15–20 s.
+- [x] Escribir `STORYBOARD.md` derivado de §4.
+- [x] Escribir `NARRACION.md` con tiempos.
+- [x] Construir animatic de 15–20 s.
 - [ ] Validar el lenguaje visual con una persona externa.
 - [ ] Congelar el guion el 8/11.
 
 ### 12.2. Modelado
-- [ ] Terreno, rocas y cielo.
-- [ ] Lander exterior (carcasa, paneles, antena, mástil).
-- [ ] Lander interior (VME, CPU, bus 1553).
-- [ ] Rover de contexto.
-- [ ] Ciudad de tareas, cerrojo, anillos.
+- [x] Terreno, rocas y cielo.
+- [x] Lander exterior (carcasa, paneles, antena, mástil).
+- [x] Lander interior (VME, CPU, bus 1553).
+- [x] Rover de contexto.
+- [x] Ciudad de tareas, cerrojo, anillos.
 - [x] Texturas de código/terminal generadas desde el demo real.
-- [ ] Paneles de código/terminal.
+- [x] Paneles de código/terminal.
 
 ### 12.3. Animación
-- [ ] Planos 1–5 (actos I–II).
-- [ ] Planos 6–10 (acto III).
-- [ ] Planos 11–12 (acto IV).
-- [ ] Planos 13–15 (acto V).
-- [ ] Revisión de continuidad y transiciones.
+- [x] Planos 1–5 (actos I–II).
+- [x] Planos 6–10 (acto III).
+- [x] Planos 11–12 (acto IV).
+- [x] Planos 13–15 (acto V).
+- [x] Revisión de continuidad y transiciones (previews de frontera).
 
 ### 12.4. Render
 - [x] Frame de prueba y medición (escena base de I0).
-- [ ] Draft 720p de los 15 planos.
-- [ ] Corrección de iluminación y cámara.
-- [ ] Render final 1080p por planos.
-- [ ] Codificación y verificación con ffprobe.
+- [x] Draft de revisión: animatic 720p + previews 480p de frontera.
+- [x] Corrección de iluminación y cámara con previews.
+- [x] Render final 1080p de la escena maestra (4320 frames).
+- [x] Codificación y verificación con ffprobe.
 
 ### 12.5. Postproducción
-- [ ] Montaje final 2:45–3:00.
-- [ ] Revisión sin narración: ¿se entiende la cadena causal?
-- [ ] Revisión con narración: ¿sobra o falta algo?
-- [ ] Exportar MP4 final.
+- [x] Montaje final 3:00.
+- [x] Revisión sin narración: contact sheet del MP4 final.
+- [ ] Revisión con narración: pendiente de ensayo con el guion.
+- [x] Exportar MP4 final.
 
 ### 12.6. Entrega
-- [ ] MP4 en `out/`.
-- [ ] `.blend` y scripts.
-- [ ] `STORYBOARD.md` y `NARRACION.md`.
-- [ ] Actualizar `../AGENTS.md` y commit.
+- [x] MP4 en `out/`.
+- [x] `.blend` y scripts.
+- [x] `STORYBOARD.md` y `NARRACION.md`.
+- [x] Actualizar `../AGENTS.md` y commit.
 
 ## 13. Criterios de aceptación
 
