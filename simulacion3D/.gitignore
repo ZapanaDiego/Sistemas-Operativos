@@ -1,0 +1,15 @@
+# Render y temporales
+out/frames/**/*.png
+out/frames/**/*.jpg
+out/spike/*.png
+out/draft/
+out/*.mp4
+
+# Blender
+blender/*.blend1
+blender/*.blend2
+blender/*.blend@
+
+# Python
+__pycache__/
+*.py[cod]

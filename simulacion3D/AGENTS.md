@@ -21,11 +21,11 @@ Si el disco contradice este documento, prevalece el disco y se corrige el docume
 
 ## 1. Estado actual
 
-- **Fase:** preproducción; contrato completo.
+- **Fase:** preproducción; I0 (base técnica) completada.
 - **Entregable único:** `out/pathfinder_failure.mp4`.
-- **Próximo hito:** `STORYBOARD.md` derivado + animatic de 15–20 s.
-- **Bloqueos:** ninguno; `../entornoRTOS/` ya reproduce S1/S2 y genera las trazas para los planos 11–12.
-- **Riesgo principal:** tiempo de render y claridad del film sin texto.
+- **Próximo hito:** `STORYBOARD.md` derivado + `NARRACION.md` + animatic de 15–20 s.
+- **Bloqueos:** ninguno; `../entornoRTOS/` reproduce S1/S2 y las texturas reales ya están generadas.
+- **Riesgo principal:** tiempo de render (medido en la escena de prueba: 3,35–7,64 s/frame a 1080p) y claridad del film sin texto.
 - **Alcance:** solo el film. El artículo, el motor S0–S5 y el demo C viven fuera de este directorio.
 
 ## 2. Objetivo, alcance y decisiones cerradas
@@ -491,7 +491,9 @@ tareas medias → libera el mutex → bc_dist termina → no hay reset
 - Fuente monoespaciada DejaVu Sans Mono.
 - Fondo `#0B0F14`; ámbar `#FFB000`; verde `#33FF77`; rojo `#FF3B30`.
 - El código se genera desde `../entornoRTOS/src/` y `../entornoRTOS/include/`; no se inventa.
-- La terminal se genera desde `../entornoRTOS/out/pip_off.txt` y `pip_on.txt`.
+- La terminal se genera desde `../entornoRTOS/out/s1_pip_off.txt` y
+  `../entornoRTOS/out/s2_pip_on.txt`; el generador es
+  `assets/code/make_textures.py`.
 - Los paneles son holográficos, pero el texto debe ser nítido y legible.
 
 ### 6.6. Escala y unidades
@@ -658,16 +660,21 @@ ejecutable del plano 12 y la fuente del código del plano 11.
 - `make test`: verifica S0/S1/S2/S3 (S1 reset, S2 OK).
 - `make run-pip-off`: imprime la traza y `WATCHDOG: RESET`.
 - `make run-pip-on`: imprime la traza y `OK`.
-- Salidas: `../entornoRTOS/out/pip_off.txt`, `../entornoRTOS/out/pip_on.txt`.
-- Código: `../entornoRTOS/src/flight_sw.c`, `../entornoRTOS/include/vxworks_like.h`.
+- Salidas: `../entornoRTOS/out/s1_pip_off.txt`, `../entornoRTOS/out/s2_pip_on.txt`.
+  El disco prevalece: no se renombran.
+- Código: `../entornoRTOS/src/pipe.c`, `../entornoRTOS/src/scenario.c`,
+  `../entornoRTOS/src/flight_sw.c`, `../entornoRTOS/include/vxworks_like.h`.
 
 ### 9.2. Generación de texturas
 
-1. Ejecutar el demo y capturar la salida real.
-2. Generar `assets/code/code_panel.png` desde el fuente real.
-3. Generar `assets/code/terminal_off.png` y `terminal_on.png` desde las salidas.
-4. Aplicar como textura emisiva en los planos 11–12.
-5. No inventar líneas de código ni salidas.
+1. Ejecutar `make test`, `make run-pip-off` y `make run-pip-on` en `../entornoRTOS/`.
+2. Ejecutar `python3 assets/code/make_textures.py`: lee el fuente real y captura
+   la salida de consola del binario.
+3. Generar `assets/code/code_panel.png`, `terminal_off.png` y `terminal_on.png`,
+   con sus compañeras `.txt` para revisión.
+4. Revisar la trazabilidad en `assets/code/SOURCES.md`.
+5. Aplicar como textura emisiva en los planos 11–12.
+6. No inventar líneas de código ni salidas.
 
 ### 9.3. Regla de honestidad
 
@@ -679,20 +686,35 @@ ejecutable del patrón". La narración en vivo lo aclara.
 | Ruta | Tipo | Propósito | Estado |
 | :--- | :--- | :--- | :--- |
 | `AGENTS.md` | Documento | Contrato local y biblia de producción | Activo |
+| `README.md` | Documento | Build, render y medición de I0 | Activo |
 | `STORYBOARD.md` | Documento | Copia imprimible de §4 | Pendiente |
 | `NARRACION.md` | Documento | Guion en vivo | Pendiente |
-| `README.md` | Documento | Build y render | Pendiente |
-| `build_scene.py` | Python | Construcción de escena | Pendiente |
-| `modules/` | Python | Terreno, lander, rover, tareas, cámaras | Pendiente |
-| `blender/` | Blender | Proyecto editable | Pendiente |
-| `assets/code/` | Imágenes | Código/terminal reales | Pendiente |
-| `out/frames/` | PNG | Secuencia de render | Pendiente |
+| `build_scene.py` | Python | Escena base y frame de prueba | Activo (I0) |
+| `render.sh` | Script | Envoltorio de build, test y render por plano | Activo |
+| `modules/cameras.py` | Python | Cámaras, luces y objetivos | Activo |
+| `modules/materials.py` | Python | Paleta y materiales PBR/emisión | Activo |
+| `modules/render.py` | Python | EEVEE, compositor, guardado y medición | Activo |
+| `modules/terrain.py` | Python | Terreno, rocas y cielo | Pendiente |
+| `modules/lander.py` | Python | Lander exterior e interior | Pendiente |
+| `modules/rover.py` | Python | Rover de contexto | Pendiente |
+| `modules/tasks.py` | Python | Ciudad de tareas, cerrojo y anillos | Pendiente |
+| `blender/pathfinder_failure.blend` | Blender | Proyecto editable (escena base) | Activo (I0) |
+| `assets/code/make_textures.py` | Python | Generador de texturas desde el demo | Activo |
+| `assets/code/code_panel.png` | Imagen | Código real de `../entornoRTOS/` | Activo |
+| `assets/code/terminal_off.png` | Imagen | Terminal S1 (`WATCHDOG: RESET`) | Activo |
+| `assets/code/terminal_on.png` | Imagen | Terminal S2 (`OK`) | Activo |
+| `assets/code/SOURCES.md` | Documento | Trazabilidad de las texturas | Activo |
+| `assets/fonts/` | Fuentes | DejaVu Sans Mono | Activo |
+| `out/frames/shot_01/` … `shot_15/` | Directorios | Secuencia de render | Vacíos |
+| `out/spike/` | PNG | Frames de prueba (ignorados por git) | Activo |
 | `out/pathfinder_failure.mp4` | Video | Entregable final | Pendiente |
+| `.gitignore` | Git | Exclusiones de render y temporales | Activo |
 
 ## 11. Bitácora
 
 | Fecha | Agente | Archivos | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `README.md`, `build_scene.py`, `render.sh`, `modules/`, `assets/code/`, `assets/fonts/`, `blender/pathfinder_failure.blend`, `out/spike/`, `.gitignore` | I0: base técnica del film; escena de prueba EEVEE; texturas reales de código/terminal desde `../entornoRTOS/`; medición de render y corrección de los nombres de salida en §9.1. | `blender -b ... -- --save --test-frame`: 1080p 7,64 s en frío y 3,35 s con caché; 720p 1,24 s; `python3 assets/code/make_textures.py` OK; `py_compile` OK. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Actualizadas las referencias `../demo/` → `../entornoRTOS/`; desbloqueado el demo C para los planos 11–12. | `grep` sin `../demo/`; `../entornoRTOS/make test` PASS. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Ampliación con la secuencia completa de 15 planos, guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l`; 15 planos; tablas y secciones revisadas. |
 | 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Creación del contrato local de `simulacion3D/` con alcance, storyboard, pipeline y R0. | Archivo creado; `ls -la simulacion3D`. |
@@ -712,6 +734,7 @@ ejecutable del patrón". La narración en vivo lo aclara.
 - [ ] Lander interior (VME, CPU, bus 1553).
 - [ ] Rover de contexto.
 - [ ] Ciudad de tareas, cerrojo, anillos.
+- [x] Texturas de código/terminal generadas desde el demo real.
 - [ ] Paneles de código/terminal.
 
 ### 12.3. Animación
@@ -722,7 +745,7 @@ ejecutable del patrón". La narración en vivo lo aclara.
 - [ ] Revisión de continuidad y transiciones.
 
 ### 12.4. Render
-- [ ] Frame de prueba y medición.
+- [x] Frame de prueba y medición (escena base de I0).
 - [ ] Draft 720p de los 15 planos.
 - [ ] Corrección de iluminación y cámara.
 - [ ] Render final 1080p por planos.

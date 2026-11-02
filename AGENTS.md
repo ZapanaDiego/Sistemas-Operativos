@@ -725,12 +725,12 @@ sim/
 - **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + reconstrucción visual.
 - **Cambio de alcance:** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00, 1080p, 24 fps). El artículo y el motor S0–S5 quedan **archivados**; el equipo asumió el riesgo académico (artículo 0/7). Ver `simulacion3D/AGENTS.md`.
 - **Mapa de fuentes:** §4.6 se conserva como base factual del film (16 fichas con anclas verificadas).
-- **Fase actual:** film en preproducción; entorno RTOS implementado y verificado (`make test` PASS).
-- **Próximo hito:** `simulacion3D/STORYBOARD.md` + animatic de 15–20 s; luego texturas de código/terminal desde `entornoRTOS/out/`.
+- **Fase actual:** film en preproducción; entorno RTOS verificado (`make test` PASS); I0 (base técnica, texturas reales y medición de render) completada.
+- **Próximo hito:** `simulacion3D/STORYBOARD.md` + `NARRACION.md` + animatic de 15–20 s.
 - **Bloqueos:** ninguno.
 - **Plantilla:** `main.tex` queda archivado (2 páginas, 0 palabras de cuerpo).
 - **Git:** repositorio con historial; el nuevo directorio se registra en §8.3 y §8.4.
-- **Riesgo principal:** tiempo de render y claridad del film sin texto; riesgo académico asumido por ausencia de artículo.
+- **Riesgo principal:** tiempo de render (medido en la escena de prueba: 3,35–7,64 s/frame a 1080p) y claridad del film sin texto; riesgo académico asumido por ausencia de artículo.
 
 ### 8.2. Checklists
 
@@ -790,8 +790,8 @@ sim/
 - [ ] Construir animatic de 15–20 s.
 - [ ] Modelar terreno, lander, rover y ciudad de tareas.
 - [ ] Animar los 15 planos.
-- [ ] Generar texturas de código/terminal desde `entornoRTOS/`.
-- [ ] Render de prueba y medición de tiempo.
+- [x] Generar texturas de código/terminal desde `entornoRTOS/`.
+- [x] Render de prueba y medición de tiempo (escena base de I0).
 - [ ] Draft 720p.
 - [ ] Render final 1080p y MP4.
 - [ ] Actualizar `AGENTS.md` global y hacer commit.
@@ -800,6 +800,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/README.md`, `build_scene.py`, `render.sh`, `modules/`, `assets/code/`, `assets/fonts/`, `blender/pathfinder_failure.blend`, `out/spike/`, `simulacion3D/.gitignore`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I0 del film: escena base EEVEE, texturas reales de código/terminal desde `entornoRTOS/`, medición de render y corrección de los nombres de salida. | 1080p 7,64 s en frío / 3,35 s con caché; 720p 1,24 s; `make_textures.py` OK; `py_compile` OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/`, `simulacion3D/AGENTS.md`, `AGENTS.md` | Implementado el entorno RTOS determinista en C11 (`ucontext`), mutex con/sin PIP, `select()`, software de vuelo y pruebas S0–S3; `make test` PASS; actualizadas las referencias `../demo/` → `../entornoRTOS/`. | `make test`: S0 0, S1 3, S2 0, S3 0; trazas deterministas; `run-pip-off` RESET; `run-pip-on` OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Ampliado el contrato local con la secuencia completa del film (15 planos detallados), guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l` = 803; 15 planos; tablas y secciones revisadas; `AGENTS.md` global sincronizado. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Creación del contrato local del film 3D y registro del cambio de alcance a "solo film" (artículo y motor S0–S5 archivados; riesgo académico asumido). | `ls -la simulacion3D`; contrato revisado; §3, §6, §7, §8.1, §8.2 y §8.4 actualizados. |
@@ -837,7 +838,15 @@ sim/
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
 | `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo** | 2026-11-02 · OpenCode |
 | `entornoRTOS/AGENTS.md` | Documento | Contrato local del entorno RTOS | Activo | 2026-11-02 · OpenCode |
-| `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo; I0 registrada | 2026-11-02 · OpenCode |
+| `simulacion3D/README.md` | Documento | Build, render y medición de I0 | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/build_scene.py` | Python | Escena base y frame de prueba | Activo (I0) | 2026-11-02 · OpenCode |
+| `simulacion3D/render.sh` | Script | Envoltorio de build, test y render por plano | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/modules/` | Python | `cameras`, `materials`, `render`; faltan terrain/lander/rover/tasks | Parcial | 2026-11-02 · OpenCode |
+| `simulacion3D/blender/pathfinder_failure.blend` | Blender | Proyecto editable (escena base) | Activo (I0) | 2026-11-02 · OpenCode |
+| `simulacion3D/assets/code/` | Imágenes/Script | Texturas reales de código/terminal y generador | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/assets/fonts/` | Fuentes | DejaVu Sans Mono | Activo | 2026-11-02 · OpenCode |
+| `simulacion3D/out/spike/` | PNG | Frames de prueba (ignorados por git) | Activo | 2026-11-02 · OpenCode |
 | `slides/` | Presentación | Slides de la exposición | Pendiente (exposición) | — |
 | `.gitignore` | Git | Exclusiones | Activo | 2026-11-02 · OpenCode |
 

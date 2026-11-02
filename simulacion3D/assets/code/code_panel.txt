@@ -1,0 +1,25 @@
+### src/pipe.c
+  65  int rtos_select(sem_t *mutex, pipe_t *p, int nfds,
+  66                  rtos_fd_set *readfds, rtos_fd_set *writefds,
+  67                  uint64_t timeout_us) {
+    ...
+  72      if (sem_take(mutex, WAIT_FOREVER) != 0) {
+  73          return -1;
+  74      }
+  76      /* Sección crítica que modela el mutex interno de select(). */
+  77      cpu_work(SELECT_WCET_US);
+    ...
+  95      sem_give(mutex);
+### src/scenario.c
+  43      if (cfg->shared_mutex) {
+  44          sem_t *shared = sem_mcreate("select_mutex", cfg->pip);
+  45          asi_mutex = shared;
+  46          dist_mutex = shared;
+  47      } else {
+  48          asi_mutex = sem_mcreate("asi_select_mutex", 0);
+  49          dist_mutex = sem_mcreate("dist_select_mutex", 0);
+  50      }
+### include/vxworks_like.h
+  15  static inline sem_t *semMCreate(const char *name, int options) {
+  16      return sem_mcreate(name, (options & SEM_INVERSION_SAFE) != 0);
+  17  }

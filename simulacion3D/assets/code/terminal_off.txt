@@ -1,0 +1,12 @@
+$ make run-pip-off
+scenario=S1 pip=0 shared=1
+resets=3 deadline_misses=3 max_block_ms=125.000
+WATCHDOG: RESET
+
+[ 0.499000] LOCK    asi_met  prio=7 select_mutex
+[ 0.500000] PREEMPT asi_met  prio=7 bc_sched
+[ 0.500100] WAIT    bc_dist  prio=3 select_mutex
+[ 0.507100] BURST   med_3    prio=6 compression
+[ 0.625000] MISS    bc_sched prio=1 bc_dist
+[ 0.625000] RESET   bc_sched prio=1 watchdog
+# SUMMARY resets=3 max_block_ms=125.000 deadline_misses=3
