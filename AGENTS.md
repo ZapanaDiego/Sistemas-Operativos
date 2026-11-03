@@ -115,7 +115,7 @@ Quedan **27 días** al 2026-11-02. El plan de cierre está en §7.7.
 
 ## 3. Definición del proyecto: el fallo del RTOS de Mars Pathfinder
 
-> **CAMBIO DE ALCANCE (2026-11-02):** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00). El artículo y el motor de simulación S0–S5 quedan **archivados**; el equipo asumió explícitamente el riesgo académico. La definición de §3.1–§3.9 se conserva como base factual del film. Ver `simulacion3D/AGENTS.md` y §8.1.
+> **REAPERTURA DEL ALCANCE (2026-11-02):** el artículo IEEE vuelve a ser entregable activo, junto con el film 3D ya renderizado. El artículo es el núcleo de investigación; el film es difusión. La base empírica es `entornoRTOS/` (C11 + ensamblador), no el motor `sim/`. Se actualizan §3.8, §3.9, §6, §7, §8.1, §8.2, §8.3 y §8.4.
 
 ### 3.1. Objetivo general
 
@@ -153,13 +153,13 @@ Los diez artículos **no son el objeto**: son el estado del arte que enmarca el 
 
 ### 3.8. Productos entregables
 
-**Activo (2026-11-02):** film 3D en `simulacion3D/` (MP4 1080p, 2:45–3:00), entorno RTOS en `entornoRTOS/` y slides para la exposición. **Archivados:** artículo IEEE, motor S0–S5 y ZIP de los diez papers (este último se conserva como entregable oficial).
+**Activos (2026-11-02):** artículo IEEE (`main.tex`) y film 3D (`simulacion3D/`, MP4 1080p, 2:45–3:00). **Base empírica:** `entornoRTOS/` (S0–S3). **Complementarios:** slides, ZIP de los diez papers y `AGENTS.md`.
 
 ### 3.9. Criterios de éxito
 
-**Activos (film):** MP4 1080p de 2:45–3:00; cadena causal comprensible sin texto; demo C reproduce reset y corrección; storyboard con fuentes por plano.
+**Activos:** artículo de 5–10 páginas de texto que responde RQ1–RQ3 con evidencia trazable; S0–S3 reproducibles en `entornoRTOS/`; film 1080p de 2:45–3:00; slides.
 
-**Archivados:** S1–S3, respuestas RQ1–RQ3, 5–10 páginas y 10 papers citados.
+**Archivados:** motor S0–S5 en `sim/` (sustituido por `entornoRTOS/`).
 
 ---
 
@@ -478,18 +478,18 @@ Este apartado responde, para cada fuente, tres preguntas: **cómo sirve al artí
 | II-A. RTOS y prioridad fija | **bibliografía base pendiente**, F13 | **No** |
 | II-B. Inversión y PIP | **bibliografía base pendiente**, F01, F06 | **No** |
 | II-C. Estado del arte | F06–F15 | Sí |
-| III. Método | F01, F02, F03, F05 | Sí |
+| III. Método | F01, F02, F03, F05, `entornoRTOS/` | Sí |
 | IV-A. Por qué falló | F01, F02, F06 | Sí |
-| IV-B. Cómo falló | F01, F06, simulación S1 | Parcial (falta S1) |
-| IV-C. Cómo se solucionó | F02, F06, simulación S2/S3 | Parcial (falta S2/S3) |
-| IV-D. Validación | simulación S4/S5 | **No** (pendiente) |
+| IV-B. Cómo falló | F01, F06, `entornoRTOS/` S1 | Sí |
+| IV-C. Cómo se solucionó | F02, F06, `entornoRTOS/` S2/S3 | Sí |
+| IV-D. Validación | `entornoRTOS/` S0–S3 | Sí; S4/S5 pendientes |
 | IV-E. Lecciones | F06, F07, F08, F09, F10, F12, F14 | Sí |
 | V. Conclusiones | síntesis | Sí |
 
 #### 4.6.5. Huecos y acciones
 
 1. **Bibliografía base ausente:** sin Silberschatz, Stallings, Sha et al. (1990) y Liu & Layland (1973), las secciones II-A y II-B no tienen sustento teórico primario. **Acción:** recuperar y mapear páginas.
-2. **Simulación no implementada:** IV-B, IV-C y IV-D dependen de S1–S5. **Acción:** ejecutar §7.7.
+2. **Simulación implementada:** `entornoRTOS/` cubre S0–S3. S4/S5 (barrido de carga y sensibilidad) quedan como trabajo futuro.
 3. **Dos EID fuera de Scopus:** no afecta al texto, pero sí a la trazabilidad. **Acción:** exportación única por DOI.
 4. **VOSviewer inconsistente:** no usar la figura actual. **Acción:** rehacer o descartar.
 5. **Fuentes secundarias:** F04, F05 y F16 no deben sostener afirmaciones técnicas por sí solas.
@@ -573,7 +573,7 @@ texcount -inc -sub=none main.tex
 
 ## 6. Diseño del artículo
 
-> **ARCHIVADO (2026-11-02):** el artículo no es un entregable activo. Este apartado se conserva como referencia por si se retoma. El trabajo activo es el film 3D en `simulacion3D/`.
+> **ACTIVO (2026-11-02):** el artículo es entregable activo. Este apartado define su estructura y presupuesto; la base empírica es `entornoRTOS/`.
 
 ### 6.1. Título y tesis
 
@@ -637,7 +637,7 @@ texcount -inc -sub=none main.tex
 
 ## 7. Diseño de la simulación
 
-> **ARCHIVADO (2026-11-02):** el motor S0–S5 no es un entregable activo. La reproducción ejecutable del mecanismo se implementó en `entornoRTOS/` (C11) y el film en `simulacion3D/`. Este apartado se conserva como referencia.
+> **ACTIVO (2026-11-02):** el diseño S0–S5 se conserva como referencia. La implementación ejecutable es `entornoRTOS/` (C11 + `switch.S`), que cubre S0–S3 y produce las trazas usadas en el artículo.
 
 ### 7.1. Qué se simula y qué no
 
@@ -722,19 +722,19 @@ sim/
 
 **Actualización 2026-11-02 (OpenCode / DeepSeek V4.1 Flash):**
 
-- **Tópico:** fallo del RTOS de Mars Pathfinder; estudio de caso + reconstrucción visual.
-- **Cambio de alcance:** el entregable activo es el **film 3D** en `simulacion3D/` (documental mudo de 2:45–3:00, 1080p, 24 fps). El artículo y el motor S0–S5 quedan **archivados**; el equipo asumió el riesgo académico (artículo 0/7). Ver `simulacion3D/AGENTS.md`.
-- **Mapa de fuentes:** §4.6 se conserva como base factual del film (16 fichas con anclas verificadas).
-- **Fase actual:** entrega; entorno RTOS verificado (`make test` PASS); film 1080p renderizado, codificado y verificado.
-- **Próximo hito:** revisión con narración en vivo y entrega del 29/11.
-- **Bloqueos:** ninguno.
-- **Plantilla:** `main.tex` queda archivado (2 páginas, 0 palabras de cuerpo).
-- **Git:** repositorio con historial; el nuevo directorio se registra en §8.3 y §8.4.
-- **Riesgo principal:** tiempo de render (medido en la escena de prueba: 3,35–7,64 s/frame a 1080p) y claridad del film sin texto; riesgo académico asumido por ausencia de artículo.
+- **Tópico:** fallo del RTOS de Mars Pathfinder; artículo + reconstrucción visual.
+- **Reapertura del artículo (2026-11-02):** el artículo IEEE vuelve a ser entregable activo, junto con el film 3D. La base empírica es `entornoRTOS/`; el motor `sim/` queda archivado.
+- **Mapa de fuentes:** §4.6 es la base factual del artículo (16 fichas con anclas verificadas).
+- **Fase actual:** Fase 4 (borrador completo; revisión pendiente). Borrador: **5.221 palabras**, **8 páginas**, **16 referencias**, 0 errores. Fase 3 completada en `entornoRTOS/`; Fase 6 (film) completada.
+- **Próximo hito:** revisión de contenido, recuperación de la bibliografía base y ajuste de página; después, slides.
+- **Bloqueos:** bibliografía base ausente (Silberschatz, Stallings); 2 EID fuera de Scopus; VOSviewer inconsistente.
+- **Plantilla:** `main.tex` activo; carátula, título, resumen y keywords actualizados.
+- **Git:** repositorio con historial; el borrador del artículo se registra en §8.3.
+- **Riesgo principal:** cumplir 5–10 páginas de solo texto y recuperar la bibliografía base antes del 29/11.
 
 ### 8.2. Checklists
 
-> **Nota 2026-11-02:** las fases 3 y 4 (simulación y redacción del artículo) quedan **archivadas** por el cambio de alcance. La Fase 5 (exposición) sigue vigente, con el film como pieza central. La fase activa es la **Fase 6 — Film 3D**.
+> **Nota 2026-11-02:** las fases 3 y 4 se reactivan. La simulación se implementó en `entornoRTOS/` (S0–S3); la redacción del artículo es la fase activa. La Fase 6 (film) está completada y pasa a difusión.
 
 #### Fase 0 — Reset y plantilla (completada)
 - [x] Eliminación del desarrollo FreeRTOS/IoT y auxiliares.
@@ -749,7 +749,7 @@ sim/
 - [x] Contribuciones C1–C3 y criterios de éxito.
 - [x] Estructura del artículo y presupuesto de palabras.
 - [x] Regla R0 e inventario.
-- [ ] Actualizar carátula, `\title`, abstract y keywords en `main.tex`.
+- [x] Actualizar carátula, `\title`, abstract y keywords en `main.tex`.
 
 #### Fase 2 — Corpus (completada salvo pendientes)
 - [x] 10 PDFs 2020–2025 en `fuentes/`.
@@ -759,22 +759,22 @@ sim/
 - [x] Mapa de explotación del corpus (§4.6) con prioridades, páginas clave y matriz de cobertura.
 - [ ] Recuperar bibliografía base (Silberschatz, Stallings, etc.).
 - [ ] Exportación Scopus única de los 10.
-- [ ] Registrar los 10 en `references.bib` con metadatos completos.
+- [x] Registrar los 10 en `references.bib` con metadatos completos.
 - [ ] Rehacer o descartar la figura de VOSviewer.
 
-#### Fase 3 — Simulación (pendiente)
-- [ ] I1: `model.py` + S0/S1.
-- [ ] I2: S2/S3 (parche y control).
-- [ ] I3: S4/S5 + figuras.
-- [ ] I4: `sim/README.md` y reproducibilidad.
-- [ ] I5: validación y límites.
+#### Fase 3 — Simulación (completada en `entornoRTOS/`)
+- [x] Entorno C11 + `switch.S` con scheduler, mutex, `select()` y watchdog.
+- [x] S0–S3 verificados (`make test` PASS; S0 0, S1 3, S2 0, S3 0).
+- [x] Trazas y visualizador de eventos.
+- [ ] S4/S5 (barrido y sensibilidad) — opcional, trabajo futuro.
 
-#### Fase 4 — Redacción (pendiente)
-- [ ] Introducción y Método.
-- [ ] Desarrollo (por qué / cómo / solución) y validación.
-- [ ] Discusión y Conclusiones.
-- [ ] Resumen y keywords.
-- [ ] Verificación de 5–10 páginas (`make count`).
+#### Fase 4 — Redacción (borrador completo)
+- [x] Estructura, tesis y RQ definidas.
+- [x] Introducción y marco teórico.
+- [x] Desarrollo (por qué / cómo / solución) y validación.
+- [x] Discusión y Conclusiones.
+- [x] Resumen y keywords.
+- [x] Verificación de 5–10 páginas (`make count`: 5.221 palabras, 8 páginas).
 
 #### Fase 5 — Presentación (adaptada: exposición con el film)
 - [ ] Slides en PDF.
@@ -782,7 +782,7 @@ sim/
 - [ ] Ensayo de los 5 indicadores de coevaluación.
 - [ ] ZIP final y entrega del 29/11.
 
-#### Fase 6 — Film 3D (activa)
+#### Fase 6 — Film 3D (completada)
 - [x] Crear `simulacion3D/AGENTS.md` con el contrato local.
 - [x] Implementar `entornoRTOS/` y verificar S0–S3 con `make test`.
 - [x] Escribir `simulacion3D/STORYBOARD.md` con los 15 planos.
@@ -800,11 +800,12 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `main.tex`, `references.bib`, `AGENTS.md` | Reapertura del artículo; 16 referencias verificadas; borrador completo con Introducción, marco teórico, Método, Resultados S0–S3, timeline, discusión y conclusiones. | `./build.sh` OK; 8 páginas; 5.221 palabras; 0 overfull; 16 citas sin undefined. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/build_scene.py`, `modules/`, `blender/pathfinder_failure.blend`, `out/frames/film/`, `out/pathfinder_failure.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I3–I9 del film: escena completa de 15 planos, animación, render 1080p de 4320 frames, codificación con fades y verificación. | Render 59:42 (0,85 s/frame); `ffprobe`: 1920 × 1080, 24 fps, 180,0 s, H.264, yuv420p, sin audio, 32.256.132 bytes; `ffmpeg -f null` DECODE_OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/animatic.py`, `blender/animatic.blend`, `out/animatic.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I2 del film: animatic de 18 s con terreno, lander, rover, ciudad y cerrojo; render 720p y MP4 de revisión. | `ffprobe`: 1280 × 720, 24 fps, 18,0 s, H.264, sin audio; ~5 min de render. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/STORYBOARD.md`, `NARRACION.md`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I1 del film: storyboard derivado de §4 con 15 planos y frames exactos; narración en vivo de 387 palabras con mapa de bloques y límites de honestidad. | 15 planos suman 180 s / 4320 frames; guion 387 palabras (~2:46 a 140 ppm, con pausas ~2:55); revisión de límites. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/README.md`, `build_scene.py`, `render.sh`, `modules/`, `assets/code/`, `assets/fonts/`, `blender/pathfinder_failure.blend`, `out/spike/`, `simulacion3D/.gitignore`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I0 del film: escena base EEVEE, texturas reales de código/terminal desde `entornoRTOS/`, medición de render y corrección de los nombres de salida. | 1080p 7,64 s en frío / 3,35 s con caché; 720p 1,24 s; `make_textures.py` OK; `py_compile` OK. |
-| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/`, `simulacion3D/AGENTS.md`, `AGENTS.md` | Implementado el entorno RTOS determinista en C11 (`ucontext`), mutex con/sin PIP, `select()`, software de vuelo y pruebas S0–S3; `make test` PASS; actualizadas las referencias `../demo/` → `../entornoRTOS/`. | `make test`: S0 0, S1 3, S2 0, S3 0; trazas deterministas; `run-pip-off` RESET; `run-pip-on` OK. |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/`, `simulacion3D/AGENTS.md`, `AGENTS.md` | Implementado el entorno RTOS determinista en C11 + ensamblador (`src/switch.S`), mutex con/sin PIP, `select()`, software de vuelo y pruebas S0–S3; `make test` PASS; actualizadas las referencias `../demo/` → `../entornoRTOS/`. | `make test`: S0 0, S1 3, S2 0, S3 0; trazas deterministas; `run-pip-off` RESET; `run-pip-on` OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Ampliado el contrato local con la secuencia completa del film (15 planos detallados), guion técnico, dirección de arte, pipeline, integración del demo C y criterios de aceptación. | `wc -l` = 803; 15 planos; tablas y secciones revisadas; `AGENTS.md` global sincronizado. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/AGENTS.md`, `AGENTS.md` | Creación del contrato local del film 3D y registro del cambio de alcance a "solo film" (artículo y motor S0–S5 archivados; riesgo académico asumido). | `ls -la simulacion3D`; contrato revisado; §3, §6, §7, §8.1, §8.2 y §8.4 actualizados. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Añadido §4.6 *Mapa de explotación del corpus*: escala 1–5, tabla maestra de 16 fuentes, fichas detalladas con anclas de página, matriz de cobertura por sección, huecos y regla de uso. | Anclas verificadas con `pdftotext` y `pdfinfo`; 16 fichas; matriz de cobertura; `./build.sh` sin cambios. |
@@ -822,9 +823,9 @@ sim/
 | :--- | :--- | :--- | :--- | :--- |
 | `AGENTS.md` | Documento maestro | Reglas, definición, estado y mapa de fuentes | Activo; incluye §4.6 | 2026-11-02 · OpenCode |
 | `docs/HISTORIAL.md` | Archivo | Bitácora anterior | Activo | 2026-11-02 · OpenCode |
-| `main.tex` | LaTeX | Carátula + artículo | Archivado (alcance solo film) | 2026-10-30 · OpenCode |
-| `main.pdf` | PDF generado | Compilación de verificación | Archivado; 2 páginas | 2026-11-02 · OpenCode |
-| `references.bib` | BibTeX | Citas | Archivado; vacío | 2026-10-30 · OpenCode |
+| `main.tex` | LaTeX | Carátula + artículo | Artículo completo (borrador) | 2026-11-02 · OpenCode |
+| `main.pdf` | PDF generado | Compilación del artículo | 8 páginas; 5.221 palabras | 2026-11-02 · OpenCode |
+| `references.bib` | BibTeX | Citas | 16 entradas verificadas | 2026-11-02 · OpenCode |
 | `IEEEtran.cls` / `.bst` | Clase/estilo | Formato IEEE | Estable | 2026-10-11 |
 | `build.sh` / `Makefile` | Scripts | Compilación y conteo | Estable | 2026-10-30 |
 | `img/logoLaSalleUniversidad.png` | Imagen | Logo de carátula | Estable | 2026-10-11 |
@@ -839,7 +840,7 @@ sim/
 | `fuentes/analisis_bibliografico/Referencias_Mendeley.ris` | RIS | Importación Mendeley | Completo | 2026-10-31 |
 | `fuentes/analisis_bibliografico/VOSviewer_*` | Datos | Mapa bibliométrico | **Inconsistente** | 2026-10-31 |
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
-| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo** | 2026-11-02 · OpenCode |
+| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo**; base empírica del artículo | 2026-11-02 · OpenCode |
 | `entornoRTOS/AGENTS.md` | Documento | Contrato local del entorno RTOS | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo; cierre registrado | 2026-11-02 · OpenCode |
 | `simulacion3D/README.md` | Documento | Build, render y entregable final | Activo | 2026-11-02 · OpenCode |

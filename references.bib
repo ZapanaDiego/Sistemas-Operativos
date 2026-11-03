@@ -1,16 +1,172 @@
 % ==============================================================================
-% references.bib — VACÍO, listo para el nuevo corpus (2021--2026)
+% references.bib — Corpus del artículo Mars Pathfinder
+% Metadatos verificados contra Crossref / fuentes primarias el 2026-11-02.
 % ==============================================================================
-% Formato IEEE obligatorio. Ejemplo de entrada:
-%
-% @article{apellidoAnioclave,
-%   author  = {Apellido, Nombre and Apellido2, Nombre2},
-%   title   = {Título Completo del Artículo Científico},
-%   journal = {IEEE Transactions on Computers},
-%   year    = {2025},
-%   volume  = {74},
-%   number  = {3},
-%   pages   = {100--115},
-%   doi     = {10.1109/TC.2025.1234567}
-% }
-% ==============================================================================
+
+% --- Fuentes primarias del caso -------------------------------------------------
+
+@misc{reeves1997mars,
+  author       = {Reeves, Glenn E.},
+  title        = {What Really Happened on Mars?},
+  year         = {1997},
+  month        = dec,
+  howpublished = {\url{https://www.cs.unc.edu/~anderson/teach/comp790/papers/mars_pathfinder_long_version.html}},
+  note         = {Correo técnico del responsable del software de vuelo de Mars Pathfinder, 15 de diciembre de 1997}
+}
+
+@article{reeves1999priority,
+  author       = {Reeves, Glenn E.},
+  title        = {Priority Inversion: How We Found It, How We Fixed It},
+  journal      = {Dr. Dobb's Journal},
+  year         = {1999},
+  month        = nov,
+  note         = {\url{https://jacobfilipp.com/DrDobbs/articles/DDJ/1999/9911/9911a/9911as1.htm}}
+}
+
+@misc{nasa2026pathfinder,
+  author       = {{NASA}},
+  title        = {Mars Pathfinder},
+  year         = {2026},
+  howpublished = {\url{https://science.nasa.gov/mission/mars-pathfinder/}},
+  note         = {Misión, aterrizaje y despliegue del rover Sojourner; consultado el 2 de noviembre de 2026}
+}
+
+@misc{ap1997glitch,
+  author       = {{Associated Press}},
+  title        = {Pathfinder Glitch Found},
+  year         = {1997},
+  month        = jul,
+  howpublished = {The Spokesman-Review, \url{https://www.spokesman.com/stories/1997/jul/18/pathfinder-glitch-found/}},
+  note         = {18 de julio de 1997}
+}
+
+% --- Fundamento teórico ---------------------------------------------------------
+
+@article{liu1973scheduling,
+  author  = {Liu, C. L. and Layland, James W.},
+  title   = {Scheduling Algorithms for Multiprogramming in a Hard-Real-Time Environment},
+  journal = {Journal of the ACM},
+  year    = {1973},
+  volume  = {20},
+  number  = {1},
+  pages   = {46--61},
+  doi     = {10.1145/321738.321743}
+}
+
+@article{sha1990priority,
+  author  = {Sha, L. and Rajkumar, R. and Lehoczky, J. P.},
+  title   = {Priority Inheritance Protocols: An Approach to Real-Time Synchronization},
+  journal = {IEEE Transactions on Computers},
+  year    = {1990},
+  volume  = {39},
+  number  = {9},
+  pages   = {1175--1185},
+  doi     = {10.1109/12.57058}
+}
+
+% --- Corpus científico 2020--2025 ----------------------------------------------
+
+@article{serra2021retif,
+  author  = {Serra, Gabriele and Ara, Gabriele and Fara, Pietro and Cucinotta, Tommaso},
+  title   = {{ReTiF}: A Declarative Real-Time Scheduling Framework for {POSIX} Systems},
+  journal = {Journal of Systems Architecture},
+  year    = {2021},
+  volume  = {118},
+  pages   = {102210},
+  doi     = {10.1016/j.sysarc.2021.102210}
+}
+
+@article{he2024resource,
+  author  = {He, Qingqiang and Sun, Yongzheng and Jiang, Xu and Lv, Mingsong and Lee, Jinkyu and Guan, Nan},
+  title   = {Real-Time Scheduling for Parallel Tasks with Resource Reclamation},
+  journal = {Real-Time Systems},
+  year    = {2024},
+  volume  = {60},
+  number  = {2},
+  pages   = {291--327},
+  doi     = {10.1007/s11241-024-09421-9}
+}
+
+@article{akesson2022survey,
+  author  = {Akesson, Benny and Nasri, Mitra and Nelissen, Geoffrey and Altmeyer, Sebastian and Davis, Robert I.},
+  title   = {A Comprehensive Survey of Industry Practice in Real-Time Systems},
+  journal = {Real-Time Systems},
+  year    = {2022},
+  volume  = {58},
+  number  = {3},
+  pages   = {358--398},
+  doi     = {10.1007/s11241-021-09376-1}
+}
+
+@article{salman2022multiprocessor,
+  author  = {Salman, Shaik Mohammed and Papadopoulos, Alessandro V. and Mubeen, Saad and Nolte, Thomas},
+  title   = {Multi-Processor Scheduling of Elastic Applications in Compositional Real-Time Systems},
+  journal = {Journal of Systems Architecture},
+  year    = {2022},
+  volume  = {122},
+  pages   = {102358},
+  doi     = {10.1016/j.sysarc.2021.102358}
+}
+
+@article{farina2023enabling,
+  author  = {Farina, Giorgio and Gala, Gautam and Cinque, Marcello and Fohler, Gerhard},
+  title   = {Enabling Memory Access Isolation in Real-Time Cloud Systems Using {Intel}'s Detection/Regulation Capabilities},
+  journal = {Journal of Systems Architecture},
+  year    = {2023},
+  volume  = {137},
+  pages   = {102848},
+  doi     = {10.1016/j.sysarc.2023.102848}
+}
+
+@article{minaeva2021survey,
+  author  = {Minaeva, Anna and Hanz{\'a}lek, Zden{\v{e}}k},
+  title   = {Survey on Periodic Scheduling for Time-Triggered Hard Real-Time Systems},
+  journal = {ACM Computing Surveys},
+  year    = {2021},
+  volume  = {54},
+  number  = {1},
+  pages   = {1--32},
+  doi     = {10.1145/3431232}
+}
+
+@article{dong2020build,
+  author  = {Dong, Pan and Jiang, Zhe and Burns, Alan and Ding, Yan and Ma, Jun},
+  title   = {Build Real-Time Communication for Hybrid Dual-{OS} System},
+  journal = {Journal of Systems Architecture},
+  year    = {2020},
+  volume  = {107},
+  pages   = {101774},
+  doi     = {10.1016/j.sysarc.2020.101774}
+}
+
+@article{deoliveira2025timerlat,
+  author  = {De Oliveira, Daniel Bristot and Casini, Daniel and Lelli, Juri and Cucinotta, Tommaso},
+  title   = {{Timerlat}: Real-Time {Linux} Scheduling Latency Measurements, Tracing, and Analysis},
+  journal = {IEEE Transactions on Computers},
+  year    = {2025},
+  volume  = {74},
+  number  = {8},
+  pages   = {2608--2620},
+  doi     = {10.1109/TC.2025.3566908}
+}
+
+@article{manjunath2024framework,
+  author  = {Manjunath, Vignesh and Baunach, Marcel},
+  title   = {A Framework for Static Analysis and Verification of Low-Level {RTOS} Code},
+  journal = {Journal of Systems Architecture},
+  year    = {2024},
+  volume  = {154},
+  pages   = {103220},
+  doi     = {10.1016/j.sysarc.2024.103220}
+}
+
+@article{guasque2022schedulability,
+  author  = {Guasque, Ana and Aceituno, Jos{\'e} Mar{\'i}a and Balbastre, Patricia and Sim{\'o}, Jos{\'e} and Crespo, Alfons},
+  title   = {Schedulability Analysis of Dynamic Priority Real-Time Systems with Contention},
+  journal = {The Journal of Supercomputing},
+  year    = {2022},
+  volume  = {78},
+  number  = {12},
+  pages   = {14703--14725},
+  doi     = {10.1007/s11227-022-04446-y}
+}
