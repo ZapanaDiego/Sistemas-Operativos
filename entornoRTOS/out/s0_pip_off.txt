@@ -28,10 +28,10 @@
 [ 0.500000] WAKE    bc_dist  prio=3 bus_sem
 [ 0.500100] WAIT    bc_dist  prio=3 select_mutex
 [ 0.507100] BURST   med_3    prio=6 compression
-[ 0.512100] UNLOCK  asi_met  prio=7 select_mutex
-[ 0.512100] WAKE    bc_dist  prio=3 select_mutex
-[ 0.515100] UNLOCK  bc_dist  prio=3 select_mutex
-[ 0.517100] WAIT    bc_dist  prio=3 bus_sem
+[ 0.514100] UNLOCK  asi_met  prio=7 select_mutex
+[ 0.514100] WAKE    bc_dist  prio=3 select_mutex
+[ 0.517100] UNLOCK  bc_dist  prio=3 select_mutex
+[ 0.519100] WAIT    bc_dist  prio=3 bus_sem
 [ 0.625000] WAKE    bc_dist  prio=3 bus_sem
 [ 0.625100] LOCK    bc_dist  prio=3 select_mutex
 [ 0.628100] UNLOCK  bc_dist  prio=3 select_mutex
@@ -49,10 +49,10 @@
 [ 1.000000] WAKE    bc_dist  prio=3 bus_sem
 [ 1.000100] WAIT    bc_dist  prio=3 select_mutex
 [ 1.007100] BURST   med_3    prio=6 compression
-[ 1.012100] UNLOCK  asi_met  prio=7 select_mutex
-[ 1.012100] WAKE    bc_dist  prio=3 select_mutex
-[ 1.015100] UNLOCK  bc_dist  prio=3 select_mutex
-[ 1.017100] WAIT    bc_dist  prio=3 bus_sem
+[ 1.014100] UNLOCK  asi_met  prio=7 select_mutex
+[ 1.014100] WAKE    bc_dist  prio=3 select_mutex
+[ 1.017100] UNLOCK  bc_dist  prio=3 select_mutex
+[ 1.019100] WAIT    bc_dist  prio=3 bus_sem
 [ 1.125000] WAKE    bc_dist  prio=3 bus_sem
 [ 1.125100] LOCK    bc_dist  prio=3 select_mutex
 [ 1.128100] UNLOCK  bc_dist  prio=3 select_mutex
@@ -70,10 +70,10 @@
 [ 1.500000] WAKE    bc_dist  prio=3 bus_sem
 [ 1.500100] WAIT    bc_dist  prio=3 select_mutex
 [ 1.507100] BURST   med_3    prio=6 compression
-[ 1.512100] UNLOCK  asi_met  prio=7 select_mutex
-[ 1.512100] WAKE    bc_dist  prio=3 select_mutex
-[ 1.515100] UNLOCK  bc_dist  prio=3 select_mutex
-[ 1.517100] WAIT    bc_dist  prio=3 bus_sem
+[ 1.514100] UNLOCK  asi_met  prio=7 select_mutex
+[ 1.514100] WAKE    bc_dist  prio=3 select_mutex
+[ 1.517100] UNLOCK  bc_dist  prio=3 select_mutex
+[ 1.519100] WAIT    bc_dist  prio=3 bus_sem
 [ 1.625000] WAKE    bc_dist  prio=3 bus_sem
 [ 1.625100] LOCK    bc_dist  prio=3 select_mutex
 [ 1.628100] UNLOCK  bc_dist  prio=3 select_mutex
@@ -89,4 +89,4 @@
 [ 1.999000] LOCK    asi_met  prio=7 select_mutex
 [ 2.000000] PREEMPT asi_met  prio=7 sim_stop
 [ 2.000000] END     -                resets=0
-# SUMMARY resets=0 max_block_ms=15.000 deadline_misses=0
+# SUMMARY resets=0 max_block_ms=17.000 deadline_misses=0

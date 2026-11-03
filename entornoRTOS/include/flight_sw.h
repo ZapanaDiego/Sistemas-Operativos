@@ -9,7 +9,7 @@ extern volatile int bc_dist_done;
 extern int flight_deadline_misses;
 
 void flight_sw_init(sem_t *asi_mutex, sem_t *dist_mutex, pipe_t *pipe,
-                    sem_t *bus_sem, uint64_t med3_wcet_us);
+                    uint64_t med3_wcet_us);
 uint64_t flight_max_block_us(void);
 
 void bc_sched(void);

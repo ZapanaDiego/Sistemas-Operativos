@@ -26,5 +26,7 @@ int sem_give(sem_t *sem);
 void sem_update_priority(task_t *t);
 void sem_reset_all(void);
 void sem_global_reset(void);
+int sem_total(void);
+sem_t *sem_at(int index);
 
 #endif

@@ -34,7 +34,7 @@
 [ 0.625100] LOCK    bc_dist  prio=3 dist_select_mutex
 [ 0.628100] UNLOCK  bc_dist  prio=3 dist_select_mutex
 [ 0.630100] WAIT    bc_dist  prio=3 bus_sem
-[ 0.663000] UNLOCK  asi_met  prio=7 asi_select_mutex
+[ 0.738200] UNLOCK  asi_met  prio=7 asi_select_mutex
 [ 0.750000] WAKE    bc_dist  prio=3 bus_sem
 [ 0.750100] LOCK    bc_dist  prio=3 dist_select_mutex
 [ 0.753100] UNLOCK  bc_dist  prio=3 dist_select_mutex
@@ -54,7 +54,7 @@
 [ 1.125100] LOCK    bc_dist  prio=3 dist_select_mutex
 [ 1.128100] UNLOCK  bc_dist  prio=3 dist_select_mutex
 [ 1.130100] WAIT    bc_dist  prio=3 bus_sem
-[ 1.163000] UNLOCK  asi_met  prio=7 asi_select_mutex
+[ 1.238200] UNLOCK  asi_met  prio=7 asi_select_mutex
 [ 1.250000] WAKE    bc_dist  prio=3 bus_sem
 [ 1.250100] LOCK    bc_dist  prio=3 dist_select_mutex
 [ 1.253100] UNLOCK  bc_dist  prio=3 dist_select_mutex
@@ -74,7 +74,7 @@
 [ 1.625100] LOCK    bc_dist  prio=3 dist_select_mutex
 [ 1.628100] UNLOCK  bc_dist  prio=3 dist_select_mutex
 [ 1.630100] WAIT    bc_dist  prio=3 bus_sem
-[ 1.663000] UNLOCK  asi_met  prio=7 asi_select_mutex
+[ 1.738200] UNLOCK  asi_met  prio=7 asi_select_mutex
 [ 1.750000] WAKE    bc_dist  prio=3 bus_sem
 [ 1.750100] LOCK    bc_dist  prio=3 dist_select_mutex
 [ 1.753100] UNLOCK  bc_dist  prio=3 dist_select_mutex

@@ -2,6 +2,7 @@
 #include "rtos.h"
 #include "sem.h"
 #include "pipe.h"
+#include "bus1553.h"
 #include "flight_sw.h"
 #include "trace.h"
 
@@ -49,8 +50,8 @@ scenario_result_t scenario_run(const scenario_config_t *cfg, FILE *out) {
         dist_mutex = sem_mcreate("dist_select_mutex", 0);
     }
 
-    sem_t *bus_sem = sem_bcreate("bus_sem");
-    flight_sw_init(asi_mutex, dist_mutex, pipe, bus_sem, cfg->med3_wcet_us);
+    bus1553_init();
+    flight_sw_init(asi_mutex, dist_mutex, pipe, cfg->med3_wcet_us);
 
     trace_event("START", NULL, "scenario=%s pip=%d shared=%d",
                 cfg->name, cfg->pip, cfg->shared_mutex);

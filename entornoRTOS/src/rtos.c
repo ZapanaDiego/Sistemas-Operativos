@@ -3,18 +3,25 @@
 #include "pipe.h"
 #include "trace.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
+/* Cambio de contexto definido en src/switch.S. */
+extern void rtos_switch(void **old_sp, void *new_sp);
+
+#define STACK_CANARY 0x5A5A5A5A5A5A5A5AULL
+
 static task_t task_pool[MAX_TASKS];
-static char task_stacks[MAX_TASKS][STACK_SIZE];
+static _Alignas(16) char task_stacks[MAX_TASKS][STACK_SIZE];
 static int task_count;
 static task_t *current;
 static uint64_t sim_time_us;
 static int stop_flag;
 static int reset_count;
-static ucontext_t sched_ctx;
-static task_t *spawn_task;
+static void *sched_sp;
+
+static void task_trampoline(void);
 
 static task_t *pick_next(void) {
     task_t *best = NULL;
@@ -64,8 +71,30 @@ static int advance_to_next_event(void) {
     return 1;
 }
 
+/*
+ * Prepara la pila inicial de una tarea.
+ *
+ * El layout, desde sp hacia arriba, es:
+ *   [r15][r14][r13][r12][rbx][rbp][return address][padding]
+ *
+ * rtos_switch hace pop de los seis registros y luego `ret`, que salta a
+ * task_trampoline. sp queda alineado a 16 bytes y la entrada a la función
+ * cumple la alineación de System V (rsp % 16 == 8).
+ */
+static void task_stack_init(task_t *t) {
+    uintptr_t top = (uintptr_t)(task_stacks[t->id] + STACK_SIZE);
+    top &= ~(uintptr_t)0xF;
+    uint64_t *frame = (uint64_t *)(top - 64);
+    for (int i = 0; i < 6; i++) {
+        frame[i] = 0;
+    }
+    frame[6] = (uint64_t)(uintptr_t)task_trampoline;
+    frame[7] = 0;
+    t->sp = (void *)frame;
+}
+
 static void task_trampoline(void) {
-    task_t *t = spawn_task;
+    task_t *t = current;
     if (t) {
         t->entry();
         t->state = TASK_DEAD;
@@ -85,18 +114,14 @@ static void scheduler(void) {
             }
             continue;
         }
-        if (next != current) {
-            if (current && current->state == TASK_RUNNING) {
-                current->state = TASK_READY;
-            }
-            current = next;
+        task_t *prev = current;
+        if (prev && prev->state == TASK_RUNNING) {
+            prev->state = TASK_READY;
         }
+        current = next;
         next->state = TASK_RUNNING;
-        if (!next->started) {
-            next->started = 1;
-            spawn_task = next;
-        }
-        swapcontext(&sched_ctx, &next->ctx);
+        trace_event("SWITCH", next, "from=%s", prev ? prev->name : "-");
+        rtos_switch(&sched_sp, next->sp);
     }
 }
 
@@ -108,8 +133,7 @@ void rtos_init(void) {
     sim_time_us = 0;
     stop_flag = 0;
     reset_count = 0;
-    spawn_task = NULL;
-    memset(&sched_ctx, 0, sizeof(sched_ctx));
+    sched_sp = NULL;
     sem_global_reset();
     pipe_global_reset();
 }
@@ -118,27 +142,22 @@ task_t *task_spawn(const char *name, int priority, void (*entry)(void)) {
     if (task_count >= MAX_TASKS) {
         return NULL;
     }
-    memset(&task_pool[task_count], 0, sizeof(task_pool[task_count]));
-    task_pool[task_count].id = task_count;
-    task_pool[task_count].name = name;
-    task_pool[task_count].base_priority = priority;
-    task_pool[task_count].effective_priority = priority;
-    task_pool[task_count].state = TASK_READY;
-    task_pool[task_count].entry = entry;
-    task_pool[task_count].wake_reason = 0;
-    task_pool[task_count].started = 0;
-    if (getcontext(&task_pool[task_count].ctx) != 0) {
-        perror("getcontext");
-        return NULL;
-    }
-    task_pool[task_count].ctx.uc_stack.ss_sp = task_stacks[task_count];
-    task_pool[task_count].ctx.uc_stack.ss_size = STACK_SIZE;
-    task_pool[task_count].ctx.uc_link = NULL;
-    makecontext(&task_pool[task_count].ctx, task_trampoline, 0);
-    task_t *spawned = &task_pool[task_count];
+    int id = task_count;
+    task_t *t = &task_pool[id];
+    memset(t, 0, sizeof(*t));
+    t->id = id;
+    t->name = name;
+    t->base_priority = priority;
+    t->effective_priority = priority;
+    t->state = TASK_READY;
+    t->entry = entry;
+    t->wake_reason = 0;
+    t->started = 0;
+    *(uint64_t *)task_stacks[id] = STACK_CANARY;
+    task_stack_init(t);
     task_count++;
-    trace_event("SPAWN", spawned, "%s", name);
-    return spawned;
+    trace_event("SPAWN", t, "%s", name);
+    return t;
 }
 
 void task_delay(uint64_t us) {
@@ -160,14 +179,13 @@ void task_yield(void) {
 }
 
 void cpu_work(uint64_t us) {
-    uint64_t end = sim_time_us + us;
-    while (sim_time_us < end) {
-        uint64_t step = end - sim_time_us;
-        if (step > 50) {
-            step = 50;
-        }
+    uint64_t remaining = us;
+    while (remaining > 0) {
+        uint64_t step = remaining > 50 ? 50 : remaining;
         sim_time_us += step;
+        remaining -= step;
         wake_sleepers();
+        trace_snapshot();
         task_t *next = pick_next();
         if (next && current && next->effective_priority < current->effective_priority) {
             if (strcmp(current->name, "asi_met") == 0) {
@@ -210,8 +228,8 @@ void rtos_reset(void) {
 }
 
 void rtos_schedule(void) {
-    if (current) {
-        swapcontext(&current->ctx, &sched_ctx);
+    if (current && sched_sp) {
+        rtos_switch(&current->sp, sched_sp);
     }
 }
 
@@ -236,4 +254,14 @@ task_t *rtos_task_at(int index) {
         return NULL;
     }
     return &task_pool[index];
+}
+
+int rtos_check_stacks(void) {
+    int bad = 0;
+    for (int i = 0; i < task_count; i++) {
+        if (*(uint64_t *)task_stacks[i] != STACK_CANARY) {
+            bad++;
+        }
+    }
+    return bad;
 }

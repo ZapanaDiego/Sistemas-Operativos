@@ -1,0 +1,12 @@
+# Binarios y objetos
+entornoRTOS
+test_signatures
+test_context
+test_bus
+*.o
+
+# Generados por el visualizador
+out/disasm.txt
+out/*_data.js
+out/viewer.html
+out/.det_*

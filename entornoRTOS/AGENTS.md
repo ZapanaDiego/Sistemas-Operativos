@@ -1,9 +1,11 @@
-# AGENTS.md — Entorno RTOS y código de fallo de Mars Pathfinder
+# AGENTS.md — Entorno RTOS C + ensamblador
 
 > **Estado:** vivo. Leer al iniciar. Actualizar al cerrar cada turno.
 > **Última actualización:** 2026-11-02 · OpenCode (DeepSeek V4.1 Flash)
 > **Documento maestro del repositorio:** `../AGENTS.md`.
 > **Este archivo es el contrato local de `entornoRTOS/`.**
+> **Alcance de este turno:** solo este directorio. No se modifica
+> `../AGENTS.md`, `simulacion3D/`, `main.tex`, `references.bib` ni `fuentes/`.
 
 ## 0. Regla de actualización (R0 local)
 
@@ -13,62 +15,73 @@ Todo agente que cree, modifique, mueva o elimine un archivo en `entornoRTOS/` de
 2. Actualizar el inventario §10.
 3. Ajustar los checkboxes §12.
 4. Actualizar el estado §1.
-5. Actualizar `../AGENTS.md` (§8.3 bitácora y §8.4 inventario), porque el repositorio es la fuente de verdad global.
 
-Si el disco contradice este documento, prevalece el disco y se corrige el documento.
+La actualización de `../AGENTS.md` (§8.3 y §8.4) queda **pendiente y fuera del
+alcance autorizado** en este turno. Si el usuario lo autoriza, se hará en un
+turno separado.
+
+Si el disco contradice este documento, prevalece el disco y se corrige el
+documento.
 
 ## 1. Estado actual
 
-- **Fase:** implementación completa y verificada.
-- **Entregable:** `entornoRTOS` compilable + `make test` con S0–S3 (PASS).
-- **Próximo hito:** generar las texturas de código/terminal para el film.
-- **Bloqueos:** ninguno.
-- **Riesgo principal:** mantener el determinismo al ajustar parámetros.
-- **Alcance:** solo el entorno RTOS y el software de vuelo. El film vive en `../simulacion3D/`.
+- **Fase:** implementación completa y verificada del entorno C + ensamblador y
+  del visualizador HTML.
+- **Entregable:** `entornoRTOS` (C11 + x86-64 asm), pruebas S0–S3 y
+  `out/viewer.html`.
+- **Próximo hito:** revisión y mejoras opcionales (PIP transitivo, visor a nivel
+  de instrucción). No hay bloqueos.
+- **Riesgo principal:** mantener la fidelidad del mecanismo al migrar a
+  ensamblador y no confundir el modelo con VxWorks.
+- **Alcance:** solo el entorno RTOS y su visualizador. El film y el artículo
+  están fuera de este directorio y fuera de este alcance.
 
 ### 1.1. Resultados verificados
 
 | Escenario | Reinicios | Bloqueo máx. | Fallos de plazo |
 | :--- | :---: | :---: | :---: |
-| S0 | 0 | 15.000 ms | 0 |
+| S0 | 0 | 17.000 ms | 0 |
 | S1 | 3 | 125.000 ms | 3 |
-| S2 | 0 | 4.900 ms | 0 |
+| S2 | 0 | 5.000 ms | 0 |
 | S3 | 0 | 3.000 ms | 0 |
 
-`make test` imprime `PASS`. `make run-pip-off` imprime `WATCHDOG: RESET`;
-`make run-pip-on` imprime `OK`. Las trazas son deterministas.
+`make test` imprime `PASS` en `test_signatures`, `test_bus` y `test_context`, y
+`determinism: PASS`. `make run-pip-off` imprime `WATCHDOG: RESET`;
+`make run-pip-on` imprime `OK`.
 
 ## 2. Objetivo y alcance
 
 ### 2.1. Objetivo
 
-Construir un **entorno RTOS simulado y determinista** en C11 que aloje el
-software de vuelo del lander Mars Pathfinder y reproduzca, paso a paso, la
-inversión de prioridades no acotada del mutex interno de `select()`, el
-incumplimiento del ciclo 1553 y el reset del watchdog, además de su corrección
-con herencia de prioridad.
+Construir un **entorno RTOS simulado y determinista** en C11 + ensamblador
+x86-64 que reproduzca la inversión de prioridades no acotada del mutex interno
+de `select()` en el ordenador de vuelo del lander Mars Pathfinder, el
+incumplimiento del ciclo 1553 de 125 ms y el reset del watchdog, además de su
+corrección con herencia de prioridad.
 
 ### 2.2. Entregable
 
-- `entornoRTOS`: binario que ejecuta un escenario y escribe una traza.
-- `test_signatures`: verifica S0–S3.
-- `out/s0_pip_off.txt`, `out/s1_pip_off.txt`, `out/s2_pip_on.txt`,
-  `out/s3_control.txt`.
-- Código fuente documentado y reproducible.
-- `README.md` con build, run, escenarios y límites.
+- `entornoRTOS`: binario que ejecuta un escenario, escribe una traza y genera
+  datos para el visualizador.
+- `src/switch.S`: cambio de contexto x86-64.
+- `out/s0_pip_off.txt` … `out/s3_control.txt`.
+- `out/viewer.html` + `out/sX_data.js`: visualizador de C, ensamblador, tareas y
+  mutex.
+- `test_signatures`, `test_bus`, `test_context` y `tests/test_determinism.sh`.
+- `README.md` con build, run, escenarios, visualizador y límites.
 
 ### 2.3. Decisiones cerradas
 
 | Decisión | Valor |
 | :--- | :--- |
-| Lenguaje | C11 |
-| Concurrencia | `ucontext` cooperativo (POSIX/glibc) |
-| Build | GNU Make + GCC/Clang |
+| Lenguaje | C11 + ensamblador x86-64 System V |
+| Contexto | `src/switch.S`, sin `ucontext` |
+| Build | GNU Make + GCC/Clang + GNU as |
 | Dependencias | Ninguna externa |
 | Privilegios | Ninguno; sin `root` |
 | Determinismo | Total; tiempo simulado, sin wall-clock |
 | Escenarios | S0–S3 |
-| Código | Identificadores en inglés; comentarios y docs en español |
+| Visualizador | HTML autocontenido, nivel de evento |
 | Relación con VxWorks | Modelo, no emulación |
 
 ### 2.4. Incluye
@@ -76,22 +89,21 @@ con herencia de prioridad.
 - RTOS modelo: scheduler de prioridad fija, tareas, tiempo simulado.
 - Mutex con y sin `SEM_INVERSION_SAFE`.
 - `pipe`, `fd_set` y `select()` con su mutex interno.
-- Watchdog de `bc_sched` cada 125 ms.
+- Bus 1553 de 8 Hz y watchdog de `bc_sched` cada 125 ms.
 - Software de vuelo: `bc_sched`, `bc_dist`, `ASI/MET`, `med_1..3`, `tExec`.
-- Traza legible y resumen de métricas.
-- Pruebas S0–S3.
+- Traza legible y datos estructurados para el visualizador.
+- Pruebas S0–S3, contexto y determinismo.
 
 ### 2.5. No incluye
 
 - VxWorks real, su código fuente o su binario.
 - Emulación bit a bit, caché, pipeline o protocolo 1553 detallado.
 - Física de la misión o telemetría de vuelo.
-- El film 3D (`../simulacion3D/`) o el artículo.
-- Audio, texto narrativo o interfaz gráfica.
+- El film 3D, el artículo IEEE o las slides.
+- Audio, texto narrativo o interfaz gráfica de escritorio.
+- Visor instrucción por instrucción.
 
 ## 3. Hechos y fuentes
-
-### 3.1. Hechos
 
 | Hecho | Fuente |
 | :--- | :--- |
@@ -106,14 +118,14 @@ con herencia de prioridad.
 | Corrección: `semMCreate(SEM_Q_PRIORITY \| SEM_INVERSION_SAFE)` | Reeves 1999 |
 | Sin pérdida de datos si se mantiene la alimentación | Reeves 1997 |
 
-### 3.2. Cadena causal
+### 3.1. Cadena causal
 
-```
+```text
 Datos de los sensores ASI/MET
         ↓
-Tarea ASI/MET (prioridad 7) llama a select() y toma el mutex interno
+ASI/MET (prioridad 7) llama a select() y toma el mutex interno
         ↓
-Tareas medias (prioridades 4–6) despiertan y expropian a ASI/MET
+Tareas medias (4–6) despiertan y expropian a ASI/MET
         ↓
 bc_dist (prioridad 3) necesita el mismo mutex y queda bloqueada
         ↓
@@ -126,12 +138,12 @@ Watchdog: reset del sistema
 
 Con PIP on:
 
-```
+```text
 bc_dist espera → ASI/MET hereda la prioridad 3 → corre por encima de las
 tareas medias → libera el mutex → bc_dist termina → no hay reset
 ```
 
-### 3.3. Reglas de integridad
+### 3.2. Reglas de integridad
 
 1. No atribuir el fallo a Sojourner.
 2. No decir "el RTOS se cayó": VxWorks funcionó como estaba configurado.
@@ -140,64 +152,71 @@ tareas medias → libera el mutex → bc_dist termina → no hay reset
 5. Los tiempos son parámetros de calibración declarados, no telemetría.
 6. La corrección es una opción de configuración, no un cambio del planificador.
 
-## 4. Arquitectura del entorno
+## 4. Arquitectura
 
 ### 4.1. Stack
 
 - C11, `-std=c11 -O2 -Wall -Wextra -Werror -D_GNU_SOURCE`.
-- `ucontext` de glibc para tareas cooperativas.
+- Ensamblador x86-64 System V (GNU as).
+- `src/switch.S` para el cambio de contexto.
 - Make para build/test/run.
-- `gdb` para depuración; `-fsanitize=address,undefined` opcional.
 - Sin dependencias externas.
 
 ### 4.2. Estructura
 
-```
+```text
 entornoRTOS/
 ├── AGENTS.md
 ├── README.md
 ├── Makefile
+├── .gitignore
 ├── include/
 │   ├── config.h
 │   ├── rtos.h
 │   ├── sem.h
 │   ├── pipe.h
+│   ├── bus1553.h
 │   ├── vxworks_like.h
 │   ├── flight_sw.h
 │   ├── trace.h
 │   └── scenario.h
 ├── src/
+│   ├── switch.S
 │   ├── rtos.c
 │   ├── sem.c
 │   ├── pipe.c
+│   ├── bus1553.c
 │   ├── flight_sw.c
 │   ├── trace.c
 │   ├── scenario.c
 │   └── main.c
 ├── tests/
-│   └── test_signatures.c
+│   ├── test_signatures.c
+│   ├── test_context.c
+│   └── test_determinism.sh
+├── viewer/
+│   └── viewer.html
 └── out/
-    └── traces/
 ```
 
 ### 4.3. Scheduler y tiempo
 
 - Tiempo simulado en microsegundos (`uint64_t`).
-- Tareas cooperativas con `ucontext`; el scheduler elige la de mayor
-  prioridad efectiva.
-- `cpu_work(us)` avanza el tiempo en pasos de 50 µs y comprueba si hay una
-  tarea de mayor prioridad lista; si la hay, cede el control.
+- Tareas propias con `ucontext` sustituido por `rtos_switch`.
+- `task_t` guarda `void *sp`; la pila inicial se prepara con alineación de 16
+  bytes y un `ret` a `task_trampoline`.
+- `cpu_work(us)` descuenta el trabajo restante de la tarea; si es expropiada,
+  conserva su `remaining` y continúa al reanudarse.
 - `task_delay(us)` duerme la tarea hasta `now + us`.
 - Si no hay tareas listas, el scheduler avanza al siguiente despertar.
 - `sim_stop` termina la simulación a los 2 s simulados.
-- Sin wall-clock, sin números aleatorios.
 
 ### 4.4. Tareas
 
 | Tarea | Prioridad | Período / activación | WCET | Rol | Recurso |
 | :--- | :---: | :--- | :---: | :--- | :--- |
 | `sim_stop` | 0 | 2 s | — | Termina la simulación | — |
-| `bc_sched` | 1 | 125 ms | 100 µs | Ciclo 1553 y watchdog | — |
+| `bc_sched` | 1 | 125 ms | 100 µs | Ciclo 1553 y watchdog | `bus_sem` |
 | `bc_dist` | 3 | Tras el bus | 2 ms | Distribuye datos; `select()`/`pipe()` | `select_mutex` |
 | `med_1` | 4 | 20 ms | 3 ms | Carga de CPU | — |
 | `med_2` | 5 | 25 ms | 4 ms | Carga de CPU | — |
@@ -205,8 +224,8 @@ entornoRTOS/
 | `ASI/MET` | 7 | 500 ms (fase 499 ms) | 0,4 ms + 3 ms de `select()` | Sensores | `select_mutex` |
 | `tExec` | 99 | — | — | CPU ociosa | — |
 
-Los valores son parámetros de calibración. `med_3` es la carga que garantiza
-la expropiación en S1; en S0 se reduce a 5 ms.
+Los valores son parámetros de calibración. `med_3` es la carga que garantiza la
+expropiación en S1; en S0 se reduce a 5 ms.
 
 ### 4.5. Mutex y herencia de prioridad
 
@@ -217,6 +236,8 @@ la expropiación en S1; en S0 se reduce a 5 ms.
   esperadores; al liberar, se recalcula su prioridad efectiva.
 - La prioridad efectiva es la que usa el scheduler.
 - La corrección es `semMCreate(SEM_Q_PRIORITY | SEM_INVERSION_SAFE)`.
+- Límite: la herencia se propaga a los esperadores directos; no se modela una
+  cadena transitiva de mutex anidados.
 
 ### 4.6. `pipe` y `select()`
 
@@ -228,77 +249,27 @@ la expropiación en S1; en S0 se reduce a 5 ms.
      expropiada.
   3. Escanea los descriptores.
   4. Libera el mutex.
-- `bc_dist` y `ASI/MET` comparten el mutex en S0–S2. En S3 usan mutex
-  separados (control).
+- `bc_dist` y `ASI/MET` comparten el mutex en S0–S2. En S3 usan mutex separados.
 
-### 4.7. Watchdog
+### 4.7. Bus 1553
 
-- `bc_sched` despierta cada 125 ms.
-- Si `bc_dist_done == 0`, registra `MISS`, incrementa el contador y llama a
-  `rtos_reset()`.
-- `rtos_reset()` libera mutex, despierta bloqueados y permite que el sistema
-  continúe; el reinicio se cuenta y se registra.
-- No se pierde el tiempo simulado; la misión continúa.
+- `bus1553.c` encapsula el ciclo de 8 Hz.
+- `bc_sched` llama a `bus1553_cycle()` cada 125 ms.
+- `bc_dist` espera con `bus1553_wait()`.
+- `bus_sem` es un semáforo binario.
+- `bus1553_cycle_count()` permite verificar 15 ciclos en 2 s.
 
-## 5. Código que falló
+### 4.8. Watchdog y reset
 
-### 5.1. `src/flight_sw.c`
+- `bc_sched` comprueba `bc_dist_done` al inicio de cada ciclo.
+- Si es 0, registra `MISS`, llama a `rtos_reset()` y cuenta el reinicio.
+- `rtos_reset()` libera los mutex, despierta a los bloqueados y marca a los
+  dueños anteriores con `lost_mutex`.
+- Cuando el dueño anterior intenta liberar, `sem_give()` registra `UNWIND` y
+  descarta la operación: el sistema reiniciado ya no reconoce ese lock.
+- No se reinician los contextos de las tareas; es una abstracción declarada.
 
-El software de vuelo se escribe como código secuencial:
-
-```c
-/* bc_dist: la tarea que queda bloqueada */
-void bc_dist(void) {
-    for (;;) {
-        semTake(bus_sem, WAIT_FOREVER);
-        rtos_select(dist_mutex, pipe, pipe->id + 1, NULL, &wfds, WAIT_FOREVER);
-        pipe_write(pipe, packet, sizeof(packet));
-        cpu_work(BC_DIST_WCET_US);
-        bc_dist_done = 1;
-    }
-}
-
-/* ASI/MET: la tarea de baja prioridad que retiene el mutex de select() */
-void asi_met(void) {
-    uint64_t next = ASI_PHASE_US;
-    for (;;) {
-        wait_until(next);
-        next += ASI_PERIOD_US;
-        rtos_select(asi_mutex, pipe, pipe->id + 1, &rfds, NULL, WAIT_FOREVER);
-        pipe_read(pipe, data, sizeof(data));
-    }
-}
-
-/* bc_sched: ciclo de 1553 y watchdog */
-void bc_sched(void) {
-    uint64_t next = CYCLE_US;
-    for (;;) {
-        wait_until(next);
-        next += CYCLE_US;
-        if (!bc_dist_done) {
-            trace_event("MISS", rtos_current(), "bc_dist");
-            rtos_reset();
-            bc_dist_done = 1;
-        }
-        bc_dist_done = 0;
-        semGive(bus_sem);
-        cpu_work(BC_SCHED_WCET_US);
-    }
-}
-```
-
-### 5.2. La corrección
-
-```c
-select_mutex = semMCreate("select_mutex",
-    SEM_Q_PRIORITY | SEM_INVERSION_SAFE);
-```
-
-Sin `SEM_INVERSION_SAFE`, `ASI/MET` no hereda prioridad. Con la opción,
-`ASI/MET` hereda la prioridad 3 de `bc_dist`, corre por encima de `med_3` (6),
-libera el mutex y `bc_dist` termina antes del próximo ciclo.
-
-### 5.3. Mapa VxWorks → modelo
+## 5. Código y mapeo VxWorks
 
 | VxWorks | Modelo |
 | :--- | :--- |
@@ -311,143 +282,159 @@ libera el mutex y `bc_dist` termina antes del próximo ciclo.
 | `select()` | `rtos_select(mutex, pipe, ...)` |
 | watchdog | chequeo de `bc_sched` |
 
-## 6. Escenarios S0–S3
+El código es propio. No se presenta como el fuente original de VxWorks.
+
+## 6. Escenarios
 
 | Escenario | PIP | Carga | Mutex | Esperado |
 | :--- | :---: | :--- | :---: | :--- |
 | S0 | off | baja (`med_3` 5 ms) | compartido | 0 reinicios |
-| S1 | off | alta (`med_3` 150 ms) | compartido | ≥ 1 reinicio |
+| S1 | off | alta (`med_3` 150 ms) | compartido | 3 reinicios |
 | S2 | on | alta | compartido | 0 reinicios |
 | S3 | off | alta | separados | 0 reinicios |
 
-`make test` verifica las cuatro firmas. S3 es el control: sin recurso
-compartido, no hay inversión.
+S3 es el control: sin recurso compartido, no hay inversión.
 
-## 7. Traza y salidas
+## 7. Traza y visualizador
+
+### 7.1. Traza de texto
 
 Formato:
 
-```
-# Pathfinder RTOS model — scenario S1
-# pip=0 shared=1 duration=2.000000s
-[0.000000] SPAWN ...
-[0.499000] LOCK  ASI/MET prio=7 select_mutex
-[0.500000] WAIT  bc_dist prio=3 select_mutex
-[0.625000] MISS  bc_sched prio=1 bc_dist
-[0.625000] RESET bc_sched prio=1 watchdog
+```text
+[0.499000] LOCK    asi_met  prio=7 select_mutex
+[0.500100] WAIT    bc_dist  prio=3 select_mutex
+[0.625000] MISS    bc_sched prio=1 bc_dist
+[0.625000] RESET   bc_sched prio=1 watchdog
+[0.733200] UNWIND  asi_met  prio=7 select_mutex
 # SUMMARY resets=3 max_block_ms=125.000 deadline_misses=3
 ```
 
-Salidas:
-- `out/s0_pip_off.txt`
-- `out/s1_pip_off.txt`
-- `out/s2_pip_on.txt`
-- `out/s3_control.txt`
+Los eventos `SWITCH`, `BUS` y las instantáneas periódicas se guardan solo en
+`out/sX_data.js`.
 
-La traza es determinista y se usa como textura en los planos 11–12 de
-`../simulacion3D/`.
+### 7.2. Visualizador
+
+- `make view` genera `out/viewer.html` y `out/sX_data.js`.
+- Paneles: C, ensamblador, tareas, mutex, bus/watchdog, contexto de misión,
+  línea de tiempo y eventos.
+- `?scenario=S1&t=500100` abre un punto concreto (microsegundos).
+- El panel de ensamblador muestra `switch.S` en eventos `SWITCH` y la
+  desensamblación de la función actual en el resto.
+- El visualizador es de nivel de evento, no un depurador instrucción por
+  instrucción.
 
 ## 8. Build, run y test
 
 ```bash
-make                 # compila entornoRTOS
-make test            # S0–S3
-make run-pip-off     # S1 → out/s1_pip_off.txt
-make run-pip-on      # S2 → out/s2_pip_on.txt
-make all-scenarios   # S0–S3
+make                 # compila
+make test            # firmas, contexto y determinismo
+make run-pip-off     # S1 -> out/s1_pip_off.txt
+make run-pip-on      # S2 -> out/s2_pip_on.txt
+make all-scenarios   # S0-S3
+make view            # genera el visualizador
 make clean
 ```
 
 Sin `sudo`. Sin variables de entorno especiales.
 
-## 9. Integración con `simulacion3D`
+## 9. Límites
 
-- `../simulacion3D/` consume `out/s1_pip_off.txt` y `out/s2_pip_on.txt`.
-- El código de `src/flight_sw.c` y `include/vxworks_like.h` se usa para
-  generar las texturas de código del film.
-- El film no modifica este directorio; solo lee sus salidas.
-- Si cambia el formato de la traza, actualizar `../simulacion3D/AGENTS.md`.
+1. Modelo determinista, no emulación de VxWorks.
+2. Tiempos sintéticos calibrados, no telemetría.
+3. `cpu_work()` no ejecuta instrucciones de la CPU histórica.
+4. El visualizador es de nivel de evento.
+5. No modela caché, pipeline, protocolo 1553 detallado ni física.
+6. El reset no reinicia los contextos; libera recursos y descarta la liberación
+   pendiente.
+7. La herencia de prioridad no es transitiva en cadenas de mutex.
+8. El cambio de contexto guarda registros callee-saved; no guarda estado FPU/SSE
+   porque las tareas no lo modifican.
+9. Solo x86-64 System V.
 
 ## 10. Inventario
 
 | Ruta | Tipo | Propósito | Estado |
 | :--- | :--- | :--- | :--- |
 | `AGENTS.md` | Documento | Contrato local | Activo |
-| `README.md` | Documento | Build, run, escenarios y límites | Completo |
-| `Makefile` | Build | Compilar, testear, ejecutar | Completo |
-| `include/` | Cabeceras | API del RTOS y del software de vuelo | Completo |
-| `src/` | C | Scheduler, mutex, pipe/select, vuelo, traza | Completo |
-| `tests/` | C | S0–S3 | Completo |
-| `out/` | Salidas | Trazas para el film | Completo |
+| `README.md` | Documento | Build, run, escenarios, visualizador y límites | Completo |
+| `Makefile` | Build | Compilar, testear, ejecutar, visualizar | Completo |
+| `.gitignore` | Git | Excluir binarios y datos generados | Activo |
+| `include/` | Cabeceras | API del RTOS, bus y vuelo | Completo |
+| `src/switch.S` | Ensamblador | Cambio de contexto x86-64 | Completo |
+| `src/` | C | Scheduler, mutex, pipe/select, bus, vuelo, traza | Completo |
+| `tests/test_signatures.c` | C | Firmas S0–S3 | Completo |
+| `tests/test_bus.c` | C | 15 ciclos 1553 en 2 s | Completo |
+| `tests/test_context.c` | C | Cambio de contexto y canarios | Completo |
+| `tests/test_determinism.sh` | Shell | Dos ejecuciones idénticas | Completo |
+| `viewer/viewer.html` | HTML/JS | Visualizador C/asm/tareas | Completo |
+| `out/s0_pip_off.txt` … `out/s3_control.txt` | Trazas | Evidencia legible | Completo |
+| `out/disasm.txt` | Generado | Desensamblación para el visor | Generado |
+| `out/sX_data.js` | Generado | Datos del visor | Generado |
+| `out/viewer.html` | Generado | Copia del visor | Generado |
 
 ## 11. Bitácora
 
 | Fecha | Agente | Archivos | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
-| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `Makefile`, `include/`, `src/`, `tests/`, `out/` | Implementación completa del entorno RTOS: scheduler `ucontext`, mutex/PIP, `select()`, software de vuelo, traza y pruebas S0–S3. | `make test` PASS; S1 3 reinicios; S2 0; trazas deterministas; `run-pip-off` RESET; `run-pip-on` OK. |
-| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `AGENTS.md` | Creación del contrato local de `entornoRTOS/`. | Archivo creado. |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `src/switch.S`, `include/`, `src/`, `tests/`, `viewer/`, `Makefile`, `README.md`, `AGENTS.md`, `.gitignore` | Migración a C + ensamblador x86-64: contexto propio, bus 1553, traza estructurada, visualizador HTML y pruebas de bus/contexto/determinismo. | `make test` PASS; S0 0/17.000/0, S1 3/125.000/3, S2 0/5.000/0, S3 0/3.000/0; `test_bus` 15 ciclos PASS; `test_context` PASS; determinismo PASS; visor S1/S2 verificado con Firefox headless. |
+| 2026-11-02 | OpenCode (DeepSeek V4.1 Flash) | `Makefile`, `include/`, `src/`, `tests/`, `out/` | Implementación previa del entorno RTOS con `ucontext`, mutex/PIP, `select()`, software de vuelo y pruebas S0–S3. | `make test` PASS; S1 3 reinicios; S2 0. |
 
 ## 12. Checklist
 
-- [x] Crear `entornoRTOS/AGENTS.md`.
-- [x] Escribir `README.md` y `Makefile`.
-- [x] Implementar tipos y configuración.
-- [x] Implementar scheduler + `ucontext` + tiempo simulado.
-- [x] Implementar mutex con/sin PIP.
-- [x] Implementar `pipe` y `select()`.
-- [x] Escribir `flight_sw.c`.
-- [x] Implementar traza y `main`.
-- [x] Implementar `tests/test_signatures.c`.
-- [x] `make test` pasa S0–S3.
-- [x] Generar `out/s0_pip_off.txt` … `out/s3_control.txt`.
-- [x] Actualizar `../AGENTS.md` y `../simulacion3D/AGENTS.md`.
-- [x] Commit.
+- [x] Implementar cambio de contexto en `src/switch.S`.
+- [x] Eliminar `ucontext` de `rtos.h` y `rtos.c`.
+- [x] Añadir `test_context` con canarios de pila.
+- [x] Extraer el bus 1553 a `bus1553.c`.
+- [x] Añadir `test_bus` (15 ciclos en 2 s).
+- [x] Instrumentar la traza con archivo, línea y función.
+- [x] Generar datos estructurados para el visualizador.
+- [x] Implementar `viewer/viewer.html`.
+- [x] Añadir `test_determinism.sh`.
+- [x] Verificar S0–S3.
+- [x] Actualizar README y AGENTS local.
+- [ ] Revisar PIP transitivo (opcional).
+- [ ] Visor instrucción por instrucción (opcional).
+- [ ] Actualizar `../AGENTS.md` global (pendiente de autorización).
 
 ## 13. Criterios de aceptación
 
-1. `make` compila sin warnings con `-Wall -Wextra -Werror`.
-2. `make test` pasa:
-   - S0: 0 reinicios.
-   - S1: ≥ 1 reinicio.
-   - S2: 0 reinicios.
-   - S3: 0 reinicios.
-3. `make run-pip-off` imprime `WATCHDOG: RESET`.
-4. `make run-pip-on` imprime `OK`.
-5. Las salidas son deterministas: dos ejecuciones producen el mismo archivo.
-6. No se usa `root`, wall-clock ni aleatoriedad.
-7. La traza muestra `LOCK`, `WAIT`, `INHERIT`, `MISS`, `RESET` cuando
-   corresponde.
-8. El código es legible y mapea a VxWorks según §5.3.
+1. `make` compila C y ensamblador sin warnings.
+2. `make test` pasa: firmas, bus, contexto y determinismo.
+3. S0: 0 reinicios; S1: 3; S2: 0; S3: 0.
+4. `grep -R ucontext include src` no devuelve nada.
+5. Dos ejecuciones de S1 producen archivos idénticos.
+6. El visualizador muestra S1 con `LOCK`, `WAIT`, `MISS`, `RESET` y S2 con
+   `INHERIT`.
+7. No se usa root, wall-clock ni aleatoriedad.
 
 ## 14. Riesgos
 
 | Riesgo | Mitigación |
 | :--- | :--- |
-| `ucontext` no disponible | glibc 2.44 lo tiene; fallback a máquina de estados si hiciera falta |
-| La inversión no se reproduce | Ajustar `med_3` y las fases; el test lo detecta |
-| Traza no determinista | Sin wall-clock ni random; semilla fija |
-| Demasiados eventos | Traza concisa: solo eventos significativos |
-| El reset deja estados inconsistentes | `rtos_reset()` libera mutex y despierta bloqueados |
-| El film espera otro formato | Documentar el formato en §7 y en `README.md` |
+| Error de alineación de pila en asm | `test_context` con canarios y S0–S3 |
+| Registros callee-saved mal restaurados | Pruebas con llamadas a `trace_event` |
+| Traza no determinista | Sin wall-clock/random; comparación byte a byte |
+| Confundir el modelo con VxWorks | Aviso en README y AGENTS; nombres de API explícitos |
+| Reset deja estados inconsistentes | `lost_mutex` + evento `UNWIND`; documentado |
+| Datos del visor no generados | `make view` los regenera |
+| Documento global desactualizado | Pendiente de autorización; no se toca |
 
 ## 15. Protocolo para agentes
 
 1. Leer este archivo y `../AGENTS.md` antes de tocar nada.
-2. No modificar `../simulacion3D/`, `../main.tex`, `../references.bib` ni
-   `../fuentes/` salvo que la tarea lo requiera.
-3. No añadir dependencias externas.
-4. Mantener el determinismo: sin wall-clock, sin random, sin hilos reales.
-5. Actualizar §10, §11 y §12 al cerrar cada turno.
-6. Actualizar `../AGENTS.md` (§8.3 y §8.4).
+2. Trabajar solo en `entornoRTOS/` salvo autorización explícita.
+3. No modificar `simulacion3D/`, `main.tex`, `references.bib` ni `fuentes/`.
+4. No añadir dependencias externas.
+5. Mantener el determinismo: sin wall-clock, sin random, sin hilos reales.
+6. Actualizar §1, §10, §11 y §12 al cerrar cada turno.
 7. Si el disco contradice este documento, prevalece el disco.
 8. Commit después de cada milestone.
 
 ## 16. Primeros pasos
 
-1. Escribir `README.md` y `Makefile`.
-2. Implementar `include/config.h`, `rtos.h`, `sem.h`, `pipe.h`.
-3. Implementar `src/rtos.c`, `sem.c`, `pipe.c`.
-4. Implementar `src/flight_sw.c`, `trace.c`, `scenario.c`, `main.c`.
-5. Implementar `tests/test_signatures.c`.
-6. Compilar y ajustar hasta que S1 falle y S2 no.
-7. Generar las salidas y actualizar los `AGENTS.md`.
+1. `make test` para verificar el entorno.
+2. `make view` y abrir `out/viewer.html`.
+3. Revisar S1 en `?scenario=S1&t=500100` y S2 en `?scenario=S2&t=500100`.
+4. Decidir si se abordan las mejoras opcionales: PIP transitivo o visor
+   instrucción por instrucción.

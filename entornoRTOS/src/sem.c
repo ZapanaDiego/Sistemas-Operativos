@@ -177,6 +177,11 @@ int sem_give(sem_t *sem) {
     }
 
     if (sem->owner != cur) {
+        if (cur->lost_mutex) {
+            cur->lost_mutex = 0;
+            trace_event("UNWIND", cur, "%s", sem->name);
+            return 0;
+        }
         trace_event("GIVE_ERR", cur, "%s", sem->name);
         return -1;
     }
@@ -213,6 +218,9 @@ int sem_give(sem_t *sem) {
 
 void sem_reset_all(void) {
     for (int i = 0; i < sem_count; i++) {
+        if (sem_pool[i].owner) {
+            sem_pool[i].owner->lost_mutex = 1;
+        }
         sem_pool[i].owner = NULL;
         sem_pool[i].count = 0;
         sem_pool[i].nwaiters = 0;
@@ -222,4 +230,15 @@ void sem_reset_all(void) {
 void sem_global_reset(void) {
     memset(sem_pool, 0, sizeof(sem_pool));
     sem_count = 0;
+}
+
+int sem_total(void) {
+    return sem_count;
+}
+
+sem_t *sem_at(int index) {
+    if (index < 0 || index >= sem_count) {
+        return NULL;
+    }
+    return &sem_pool[index];
 }

@@ -2,7 +2,6 @@
 #define RTOS_H
 
 #include <stdint.h>
-#include <ucontext.h>
 #include "config.h"
 
 typedef enum {
@@ -21,12 +20,13 @@ typedef struct task {
     int base_priority;
     int effective_priority;
     task_state_t state;
-    ucontext_t ctx;
+    void *sp;                    /* stack pointer guardado por switch.S */
     void (*entry)(void);
     uint64_t wake_time_us;
-    int wake_reason; /* 0 normal, 1 timeout, 2 reset */
+    int wake_reason;             /* 0 normal, 1 timeout, 2 reset */
     sem_t *waiting_on;
     int started;
+    int lost_mutex;              /* el reset invalidó un mutex que tenía tomado */
 } task_t;
 
 void rtos_init(void);
@@ -44,5 +44,6 @@ int rtos_reset_count(void);
 task_t *rtos_current(void);
 int rtos_task_count(void);
 task_t *rtos_task_at(int index);
+int rtos_check_stacks(void);
 
 #endif

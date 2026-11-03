@@ -1,4 +1,5 @@
 #include "flight_sw.h"
+#include "bus1553.h"
 #include "vxworks_like.h"
 #include "trace.h"
 
@@ -8,7 +9,6 @@ int flight_deadline_misses = 0;
 static sem_t *g_asi_mutex;
 static sem_t *g_dist_mutex;
 static pipe_t *g_pipe;
-static sem_t *g_bus_sem;
 static uint64_t g_med3_wcet_us;
 static uint64_t g_max_block_us;
 
@@ -25,11 +25,10 @@ static void wait_until(uint64_t t) {
 }
 
 void flight_sw_init(sem_t *asi_mutex, sem_t *dist_mutex, pipe_t *pipe,
-                    sem_t *bus_sem, uint64_t med3_wcet_us) {
+                    uint64_t med3_wcet_us) {
     g_asi_mutex = asi_mutex;
     g_dist_mutex = dist_mutex;
     g_pipe = pipe;
-    g_bus_sem = bus_sem;
     g_med3_wcet_us = med3_wcet_us;
     g_max_block_us = 0;
     bc_dist_done = 1;
@@ -54,14 +53,14 @@ void bc_sched(void) {
         }
 
         bc_dist_done = 0;
-        semGive(g_bus_sem);
+        bus1553_cycle();
         cpu_work(BC_SCHED_WCET_US);
     }
 }
 
 void bc_dist(void) {
     for (;;) {
-        if (semTake(g_bus_sem, WAIT_FOREVER) != 0) {
+        if (bus1553_wait() != 0) {
             bc_dist_done = 1;
             continue;
         }

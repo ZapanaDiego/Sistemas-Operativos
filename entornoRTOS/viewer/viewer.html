@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pathfinder RTOS — Visualizador C + ensamblador</title>
+<style>
+  :root {
+    --bg: #0b0f14;
+    --panel: #121820;
+    --panel2: #0e141b;
+    --line: #1f2a36;
+    --text: #d8dee9;
+    --dim: #7c8796;
+    --amber: #ffb000;
+    --red: #ff3b30;
+    --green: #34c759;
+    --blue: #0a84ff;
+    --white: #ffffff;
+    --orange: #ff9500;
+    --mono: "DejaVu Sans Mono", "Liberation Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 14px 18px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #111820, #0b0f14);
+  }
+  h1 { font-size: 17px; margin: 0; letter-spacing: .02em; }
+  .sub { margin: 3px 0 0; color: var(--dim); font-size: 12px; }
+  .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .controls label { color: var(--dim); font-size: 12px; }
+  .controls .chk { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .controls .chk input { accent-color: var(--amber); }
+  select, button {
+    background: #18222d; color: var(--text); border: 1px solid #2a3846;
+    border-radius: 6px; padding: 6px 9px; font-size: 12px; cursor: pointer;
+  }
+  button:hover, select:hover { border-color: var(--amber); }
+  #clock { font-family: var(--mono); color: var(--amber); font-size: 13px; min-width: 11ch; text-align: right; }
+  main {
+    display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 14px; padding: 14px;
+  }
+  .left, .right { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; min-width: 0; }
+  .panel h2 { margin: 0 0 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); font-weight: 600; }
+  .panel h2 span { color: var(--amber); text-transform: none; letter-spacing: 0; font-family: var(--mono); }
+  .code {
+    position: relative; max-height: 390px; overflow: auto; background: var(--panel2);
+    border: 1px solid #19232e; border-radius: 7px; padding: 8px 4px;
+    font-family: var(--mono); font-size: 12px; line-height: 1.45;
+  }
+  .line { display: flex; white-space: pre; padding: 0 6px; }
+  .line .ln { color: #51606f; width: 4.2em; flex: none; text-align: right; padding-right: 1em; user-select: none; }
+  .line .src { white-space: pre; }
+  .line.hl { background: #3a2a00; outline: 1px solid #9a6b00; }
+  .line.hl .ln { color: var(--amber); }
+  .asm { max-height: 250px; }
+  .task-name { font-family: var(--mono); font-weight: 700; }
+  .t-bc_sched { color: var(--white); }
+  .t-bc_dist { color: var(--red); }
+  .t-med { color: var(--orange); }
+  .t-asi_met { color: var(--blue); }
+  .t-t_exec { color: var(--dim); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid #1a2430; }
+  th { color: var(--dim); font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+  td { font-family: var(--mono); }
+  .state { display: inline-block; padding: 1px 6px; border-radius: 999px; font-size: 10px; background: #1d2a36; color: var(--dim); }
+  .state.RUNNING { background: #123a1d; color: var(--green); }
+  .state.READY { background: #2b2a12; color: var(--amber); }
+  .state.BLOCKED { background: #3a1414; color: var(--red); }
+  .state.SLEEPING { background: #17222e; color: #7fa7c9; }
+  .state.DEAD { background: #222; color: #666; }
+  .explain { font-size: 13px; line-height: 1.45; min-height: 2.8em; }
+  .kv { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 12px; padding: 2px 0; }
+  .kv span:first-child { color: var(--dim); }
+  .pill { color: var(--amber); }
+  .muted { color: var(--dim); font-size: 12px; }
+  .bottom { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 14px; padding: 0 14px 18px; }
+  #timeline { width: 100%; accent-color: var(--amber); }
+  .timeline-labels { display: flex; justify-content: space-between; color: var(--dim); font-family: var(--mono); font-size: 11px; margin-top: 2px; }
+  .events { position: relative; max-height: 260px; overflow: auto; display: flex; flex-direction: column; gap: 2px; }
+  .ev {
+    display: grid; grid-template-columns: 7.6em 5.4em 1fr; gap: 6px;
+    padding: 4px 6px; border-radius: 5px; cursor: pointer; font-family: var(--mono); font-size: 11px;
+    border: 1px solid transparent;
+  }
+  .ev:hover { background: #17212c; }
+  .ev.active { background: #2a2108; border-color: #6b4c00; }
+  .ev .time { color: var(--dim); }
+  .ev .type { color: var(--amber); }
+  .ev .type.RESET, .ev .type.MISS { color: var(--red); }
+  .ev .type.INHERIT, .ev .type.UNLOCK { color: var(--green); }
+  .ev .detail { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; font-size: 11px; color: var(--dim); }
+  .legend b { font-family: var(--mono); }
+  .ctx p { margin: 0 0 7px; font-size: 12px; line-height: 1.45; color: #b9c3cf; }
+  .ctx strong { color: var(--text); }
+  .warn { border-left: 3px solid var(--amber); padding-left: 9px; color: #d8c58a; font-size: 12px; line-height: 1.45; }
+  @media (max-width: 1000px) {
+    main, .bottom { grid-template-columns: 1fr; }
+    header { align-items: flex-start; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Pathfinder RTOS — visualizador</h1>
+    <p class="sub">Reconstrucción propia en C + ensamblador. No es el código original de VxWorks.</p>
+  </div>
+  <div class="controls">
+    <label for="scenario">Escenario</label>
+    <select id="scenario">
+      <option value="S0">S0 — carga baja, PIP off</option>
+      <option value="S1" selected>S1 — carga alta, PIP off</option>
+      <option value="S2">S2 — carga alta, PIP on</option>
+      <option value="S3">S3 — mutex separados</option>
+    </select>
+    <button id="prev" title="Evento anterior">◀</button>
+    <button id="play">Play</button>
+    <button id="next" title="Evento siguiente">▶</button>
+    <label class="chk"><input type="checkbox" id="show-switch"> SWITCH</label>
+    <span id="clock">0.000000 s</span>
+  </div>
+</header>
+
+<main>
+  <section class="left">
+    <div class="panel">
+      <h2>C — <span id="cfile">—</span></h2>
+      <div id="code" class="code"></div>
+    </div>
+    <div class="panel">
+      <h2>Ensamblador — <span id="asmfile">switch.S</span></h2>
+      <div id="asm" class="code asm"></div>
+    </div>
+  </section>
+
+  <aside class="right">
+    <div class="panel">
+      <h2>Qué está pasando</h2>
+      <div id="explain" class="explain muted">Carga un escenario para comenzar.</div>
+    </div>
+
+    <div class="panel">
+      <h2>Tareas</h2>
+      <div id="tasktable" class="muted">—</div>
+    </div>
+
+    <div class="panel">
+      <h2>Mutex</h2>
+      <div id="semtable" class="muted">—</div>
+    </div>
+
+    <div class="panel">
+      <h2>Bus 1553 y watchdog</h2>
+      <div id="businfo" class="muted">—</div>
+      <div class="legend">
+        <span><b class="t-bc_sched">bc_sched</b> blanco</span>
+        <span><b class="t-bc_dist">bc_dist</b> rojo</span>
+        <span><b class="t-med">medias</b> naranja</span>
+        <span><b class="t-asi_met">ASI/MET</b> azul</span>
+      </div>
+    </div>
+
+    <div class="panel ctx">
+      <h2>Contexto de misión</h2>
+      <p><strong>El fallo fue en el lander.</strong> Sojourner era un sistema aparte; el ordenador de vuelo del lander ejecutaba VxWorks, compartía el mutex de <code>select()</code> y se reiniciaba.</p>
+      <p>El ciclo 1553 es de <strong>125 ms</strong>. <code>bc_sched</code> comprueba a <code>bc_dist</code>; si no terminó, el watchdog reinicia.</p>
+      <p class="warn">El código mostrado es nuestra reconstrucción. El fuente histórico de VxWorks es propietario y no está disponible.</p>
+    </div>
+  </aside>
+</main>
+
+<section class="bottom">
+  <div class="panel">
+    <h2>Línea de tiempo</h2>
+    <input id="timeline" type="range" min="0" max="2000000" step="1000" value="0">
+    <div class="timeline-labels"><span>0.000 s</span><span id="duration-label">2.000 s</span></div>
+  </div>
+  <div class="panel">
+    <h2>Eventos</h2>
+    <div id="events" class="events"></div>
+  </div>
+</section>
+
+<script src="s0_data.js"></script>
+<script src="s1_data.js"></script>
+<script src="s2_data.js"></script>
+<script src="s3_data.js"></script>
+<script>
+  window.SCENARIOS = window.SCENARIOS || {};
+
+  const $ = (id) => document.getElementById(id);
+  const codeEl = $("code");
+  const asmEl = $("asm");
+  const explainEl = $("explain");
+  const eventsEl = $("events");
+  const timelineEl = $("timeline");
+  const clockEl = $("clock");
+  const showSwitchEl = $("show-switch");
+
+  let data = null;
+  let records = [];
+  let currentTime = 0;
+  let currentIndex = 0;
+  let stateIndex = 0;
+  let playing = false;
+  let playTimer = null;
+
+  function formatTime(us) {
+    return (us / 1000000).toFixed(6) + " s";
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+  }
+
+  function isVisible(rec) {
+    if (rec.type === "SNAP") return false;
+    if (rec.type === "SWITCH" && !showSwitchEl.checked) return false;
+    return true;
+  }
+
+  function taskClass(name) {
+    if (name === "bc_sched") return "t-bc_sched";
+    if (name === "bc_dist") return "t-bc_dist";
+    if (name && name.startsWith("med_")) return "t-med";
+    if (name === "asi_met") return "t-asi_met";
+    return "t-t_exec";
+  }
+
+  function showMessage(message) {
+    codeEl.innerHTML = `<div class="muted">${escapeHtml(message)}</div>`;
+    asmEl.innerHTML = "";
+    explainEl.textContent = message;
+    $("tasktable").innerHTML = '<span class="muted">—</span>';
+    $("semtable").innerHTML = '<span class="muted">—</span>';
+    $("businfo").innerHTML = '<span class="muted">—</span>';
+    eventsEl.innerHTML = "";
+  }
+
+  function ensureScenario(name, onReady) {
+    if (SCENARIOS[name]) {
+      onReady();
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `s${name.toLowerCase()}_data.js`;
+    script.onload = () => {
+      if (SCENARIOS[name]) onReady();
+      else showMessage(`El archivo s${name.toLowerCase()}_data.js no contiene el escenario ${name}.`);
+    };
+    script.onerror = () => {
+      showMessage(`No se encontró s${name.toLowerCase()}_data.js. Ejecuta "make view" en entornoRTOS/.`);
+    };
+    document.head.appendChild(script);
+  }
+
+  function setScenario(name, initialTime = 0) {
+    ensureScenario(name, () => {
+      data = SCENARIOS[name];
+      records = data.events || [];
+      currentTime = initialTime;
+      currentIndex = recordAtVisible(currentTime);
+      stateIndex = recordAt(currentTime);
+      timelineEl.max = data.duration_us || 2000000;
+      timelineEl.value = currentTime;
+      $("duration-label").textContent = formatTime(data.duration_us || 2000000);
+      $("scenario").value = name;
+      buildEventList();
+      render();
+    });
+  }
+
+  function recordAt(time) {
+    let lo = 0;
+    let hi = records.length - 1;
+    let ans = 0;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (records[mid].t <= time) {
+        ans = mid;
+        lo = mid + 1;
+      } else {
+        hi = mid - 1;
+      }
+    }
+    return ans;
+  }
+
+  function recordAtVisible(time) {
+    let idx = recordAt(time);
+    while (idx > 0 && !isVisible(records[idx])) {
+      idx--;
+    }
+    return idx;
+  }
+
+  function renderSource(rec) {
+    if (!rec.file || !data.sources || !data.sources[rec.file]) {
+      codeEl.innerHTML = '<div class="muted">Este evento no tiene una línea C asociada.</div>';
+      $("cfile").textContent = "—";
+      return;
+    }
+    const lines = (data.sources[rec.file] || "").split("\n");
+    const html = lines.map((line, index) => {
+      const n = index + 1;
+      const hl = n === rec.line ? " hl" : "";
+      return `<div class="line${hl}"><span class="ln">${String(n).padStart(4, " ")}</span><span class="src">${escapeHtml(line)}</span></div>`;
+    }).join("");
+    codeEl.innerHTML = html;
+    $("cfile").textContent = `${rec.file}:${rec.line}`;
+    const hl = codeEl.querySelector(".hl");
+    if (hl) {
+      codeEl.scrollTop = Math.max(0, hl.offsetTop - codeEl.clientHeight / 2);
+    }
+  }
+
+  function extractFunction(disasm, func) {
+    if (!disasm || !func) return "";
+    const lines = disasm.split("\n");
+    const start = lines.findIndex((line) => line.includes(`<${func}>:`));
+    if (start < 0) return "";
+    let end = lines.length;
+    for (let i = start + 1; i < lines.length; i++) {
+      if (/^[0-9a-f]+ <[^>]+>:$/.test(lines[i])) {
+        end = i;
+        break;
+      }
+    }
+    return lines.slice(start, end).join("\n");
+  }
+
+  function renderAsm(rec) {
+    let text = data.asm || "";
+    let title = "switch.S";
+    if (rec.type !== "SWITCH" && rec.func && data.disasm) {
+      const fn = extractFunction(data.disasm, rec.func);
+      if (fn) {
+        text = fn;
+        title = `disasm: ${rec.func}`;
+      }
+    }
+    $("asmfile").textContent = title;
+    if (!text) {
+      asmEl.innerHTML = '<div class="muted">Sin ensamblador disponible.</div>';
+      return;
+    }
+    asmEl.innerHTML = text.split("\n").map((line) => {
+      const hl = line.includes("rtos_switch:") || line.includes("pushq") || line.includes("popq") || line.trim() === "ret";
+      return `<div class="line${hl ? " hl" : ""}"><span class="src">${escapeHtml(line)}</span></div>`;
+    }).join("");
+  }
+
+  function renderTasks(rec) {
+    const tasks = (rec.snap && rec.snap.tasks) || [];
+    if (!tasks.length) {
+      $("tasktable").innerHTML = '<span class="muted">Sin tareas.</span>';
+      return;
+    }
+    const rows = tasks.map((task) => {
+      const waiting = task.waiting ? ` <span class="muted">→ ${escapeHtml(task.waiting)}</span>` : "";
+      return `<tr>
+        <td class="${taskClass(task.name)}">${escapeHtml(task.name)}</td>
+        <td><span class="state ${task.state}">${task.state}</span></td>
+        <td>${task.base}</td>
+        <td>${task.eff}${waiting}</td>
+      </tr>`;
+    }).join("");
+    $("tasktable").innerHTML = `<table>
+      <thead><tr><th>Tarea</th><th>Estado</th><th>Base</th><th>Efectiva</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function renderSems(rec) {
+    const sems = (rec.snap && rec.snap.sems) || [];
+    if (!sems.length) {
+      $("semtable").innerHTML = '<span class="muted">Sin mutex.</span>';
+      return;
+    }
+    const rows = sems.map((sem) => {
+      const waiters = (sem.waiters || []).length ? sem.waiters.map(escapeHtml).join(", ") : "—";
+      return `<tr>
+        <td>${escapeHtml(sem.name)}</td>
+        <td>${sem.owner ? `<span class="${taskClass(sem.owner)}">${escapeHtml(sem.owner)}</span>` : "—"}</td>
+        <td>${sem.pip ? "on" : "off"}</td>
+        <td>${waiters}</td>
+      </tr>`;
+    }).join("");
+    $("semtable").innerHTML = `<table>
+      <thead><tr><th>Mutex</th><th>Dueño</th><th>PIP</th><th>Esperan</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function renderBus(rec) {
+    const summary = data.summary || {};
+    const snap = rec.snap || {};
+    $("businfo").innerHTML = `
+      <div class="kv"><span>Ciclo 1553</span><span class="pill">${snap.bus_cycle || 0}</span></div>
+      <div class="kv"><span>Tarea actual</span><span>${escapeHtml(snap.current || "—")}</span></div>
+      <div class="kv"><span>Reinicios hasta t</span><span>${snap.resets ?? 0}</span></div>
+      <div class="kv"><span>Fallos hasta t</span><span>${snap.misses ?? 0}</span></div>
+      <div class="kv"><span>Total del escenario</span><span>${summary.resets ?? "—"} / ${summary.deadline_misses ?? "—"}</span></div>
+      <div class="kv"><span>Bloqueo máximo (total)</span><span>${summary.max_block_ms ?? "—"} ms</span></div>
+    `;
+  }
+
+  function eventExplanation(rec) {
+    const task = rec.task || "—";
+    const detail = rec.detail || "";
+    switch (rec.type) {
+      case "LOCK": return `${task} toma el mutex ${detail}.`;
+      case "WAIT": return `${task} se bloquea esperando ${detail}.`;
+      case "INHERIT": return `${task} hereda prioridad ${rec.prio} por ${detail}.`;
+      case "UNLOCK": return `${task} libera ${detail}.`;
+      case "UNWIND": return `El reset invalidó ${detail}; la liberación pendiente de ${task} se descarta.`;
+      case "WAKE": return `${task} despierta de ${detail}.`;
+      case "BURST": return `${task} ejecuta su ráfaga de CPU (${detail}).`;
+      case "PREEMPT": return `${task} es expropiada por ${detail}.`;
+      case "MISS": return "bc_sched detecta que bc_dist no terminó el ciclo de 125 ms.";
+      case "RESET": return "El watchdog reinicia el sistema.";
+      case "SWITCH": return `Cambio de contexto (${detail}).`;
+      case "BUS": return `Ciclo 1553 ${detail}; bc_sched libera el bus.`;
+      case "SPAWN": return `Se crea la tarea ${detail}.`;
+      case "START": return `Comienza el escenario ${detail}.`;
+      case "END": return `Fin de la simulación: ${detail}.`;
+      case "SNAP": return "Estado estable.";
+      default: return `${rec.type} ${detail}`;
+    }
+  }
+
+  function renderExplain(rec) {
+    let target = rec;
+    if (rec.type === "SNAP") {
+      for (let i = currentIndex; i >= 0; i--) {
+        if (records[i].type !== "SNAP") {
+          target = records[i];
+          break;
+        }
+      }
+    }
+    explainEl.textContent = eventExplanation(target);
+    explainEl.classList.remove("muted");
+  }
+
+  function buildEventList() {
+    const items = [];
+    records.forEach((rec, index) => {
+      if (!isVisible(rec)) return;
+      const detail = rec.detail ? ` ${rec.detail}` : "";
+      items.push(`<div class="ev" data-idx="${index}">
+        <span class="time">[${formatTime(rec.t)}]</span>
+        <span class="type ${rec.type}">${rec.type}</span>
+        <span class="detail">${escapeHtml((rec.task || "—") + detail)}</span>
+      </div>`);
+    });
+    eventsEl.innerHTML = items.join("");
+    eventsEl.querySelectorAll(".ev").forEach((el) => {
+      el.addEventListener("click", () => {
+        const idx = Number(el.dataset.idx);
+        currentIndex = idx;
+        currentTime = records[idx].t;
+        stateIndex = recordAt(currentTime);
+        timelineEl.value = currentTime;
+        render();
+      });
+    });
+  }
+
+  function updateEventList() {
+    eventsEl.querySelectorAll(".ev").forEach((el) => {
+      const active = Number(el.dataset.idx) === currentIndex;
+      el.classList.toggle("active", active);
+      if (active) {
+        eventsEl.scrollTop = Math.max(0, el.offsetTop - eventsEl.clientHeight / 2);
+      }
+    });
+  }
+
+  function render() {
+    if (!data || !records.length) return;
+    const rec = records[currentIndex] || records[0];
+    const stateRec = records[stateIndex] || rec;
+    clockEl.textContent = formatTime(currentTime);
+    renderSource(rec);
+    renderAsm(rec);
+    renderTasks(stateRec);
+    renderSems(stateRec);
+    renderBus(stateRec);
+    renderExplain(rec);
+    updateEventList();
+  }
+
+  function stopPlay() {
+    playing = false;
+    if (playTimer) clearInterval(playTimer);
+    playTimer = null;
+    $("play").textContent = "Play";
+  }
+
+  function togglePlay() {
+    if (playing) {
+      stopPlay();
+      return;
+    }
+    if (!data) return;
+    playing = true;
+    $("play").textContent = "Pausa";
+    playTimer = setInterval(() => {
+      currentTime += 5000;
+      if (currentTime >= data.duration_us) {
+        currentTime = data.duration_us;
+        stopPlay();
+      }
+      timelineEl.value = currentTime;
+      currentIndex = recordAtVisible(currentTime);
+      stateIndex = recordAt(currentTime);
+      render();
+    }, 50);
+  }
+
+  function moveEvent(direction) {
+    if (!records.length) return;
+    let idx = currentIndex;
+    for (let i = 0; i < records.length; i++) {
+      idx += direction;
+      if (idx < 0) idx = 0;
+      if (idx >= records.length) idx = records.length - 1;
+      if (isVisible(records[idx])) break;
+    }
+    currentIndex = idx;
+    currentTime = records[idx].t;
+    stateIndex = recordAt(currentTime);
+    timelineEl.value = currentTime;
+    render();
+  }
+
+  timelineEl.addEventListener("input", () => {
+    currentTime = Number(timelineEl.value);
+    currentIndex = recordAtVisible(currentTime);
+    stateIndex = recordAt(currentTime);
+    render();
+  });
+  $("scenario").addEventListener("change", (event) => {
+    stopPlay();
+    setScenario(event.target.value, 0);
+  });
+  $("play").addEventListener("click", togglePlay);
+  $("prev").addEventListener("click", () => moveEvent(-1));
+  $("next").addEventListener("click", () => moveEvent(1));
+  showSwitchEl.addEventListener("change", () => {
+    currentIndex = recordAtVisible(currentTime);
+    buildEventList();
+    render();
+  });
+
+  window.addEventListener("load", () => {
+    const params = new URLSearchParams(window.location.search);
+    const scenario = params.get("scenario") || "S1";
+    const time = Number(params.get("t") || 0);
+    setScenario(scenario, time);
+  });
+</script>
+</body>
+</html>
