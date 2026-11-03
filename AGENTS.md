@@ -800,6 +800,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/` (fuentes, tests, trazas, viewer) | Congela la base empírica del artículo: S0–S3, pruebas de bus y contexto, determinismo y trazas versionadas. Commit `6041471`. | `make test` PASS: S0 0/17, S1 3/125, S2 0/5, S3 0/3; determinismo PASS. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `main.tex`, `references.bib`, `AGENTS.md` | Reapertura del artículo; 16 referencias verificadas; borrador completo con Introducción, marco teórico, Método, Resultados S0–S3, timeline, discusión y conclusiones. | `./build.sh` OK; 8 páginas; 5.221 palabras; 0 overfull; 16 citas sin undefined. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/build_scene.py`, `modules/`, `blender/pathfinder_failure.blend`, `out/frames/film/`, `out/pathfinder_failure.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I3–I9 del film: escena completa de 15 planos, animación, render 1080p de 4320 frames, codificación con fades y verificación. | Render 59:42 (0,85 s/frame); `ffprobe`: 1920 × 1080, 24 fps, 180,0 s, H.264, yuv420p, sin audio, 32.256.132 bytes; `ffmpeg -f null` DECODE_OK. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/animatic.py`, `blender/animatic.blend`, `out/animatic.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I2 del film: animatic de 18 s con terreno, lander, rover, ciudad y cerrojo; render 720p y MP4 de revisión. | `ffprobe`: 1280 × 720, 24 fps, 18,0 s, H.264, sin audio; ~5 min de render. |
@@ -840,7 +841,7 @@ sim/
 | `fuentes/analisis_bibliografico/Referencias_Mendeley.ris` | RIS | Importación Mendeley | Completo | 2026-10-31 |
 | `fuentes/analisis_bibliografico/VOSviewer_*` | Datos | Mapa bibliométrico | **Inconsistente** | 2026-10-31 |
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
-| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo**; base empírica del artículo | 2026-11-02 · OpenCode |
+| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo y congelado**; base empírica (commit `6041471`) | 2026-11-02 · OpenCode |
 | `entornoRTOS/AGENTS.md` | Documento | Contrato local del entorno RTOS | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo; cierre registrado | 2026-11-02 · OpenCode |
 | `simulacion3D/README.md` | Documento | Build, render y entregable final | Activo | 2026-11-02 · OpenCode |
