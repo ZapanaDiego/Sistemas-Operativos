@@ -729,7 +729,7 @@ sim/
 - **Próximo hito:** revisión de contenido, recuperación de la bibliografía base y ajuste de página; después, slides.
 - **Bloqueos:** bibliografía base ausente (Silberschatz, Stallings); 2 EID fuera de Scopus; VOSviewer inconsistente.
 - **Plantilla:** `main.tex` activo; carátula, título, resumen y keywords actualizados.
-- **Git:** repositorio con historial; el borrador del artículo se registra en §8.3.
+- **Git:** repositorio con historial; `entornoRTOS/` y `simulacion3D/` excluidos del índice el 2026-11-05 (siguen en disco). El historial anterior aún contiene sus blobs; para un GitHub sin ellos habría que reescribir la historia.
 - **Riesgo principal:** cumplir 5–10 páginas de solo texto y recuperar la bibliografía base antes del 29/11.
 
 ### 8.2. Checklists
@@ -800,6 +800,7 @@ sim/
 
 | Fecha | Agente | Archivos afectados | Cambio | Verificación |
 | :--- | :--- | :--- | :--- | :--- |
+| **2026-11-05** | OpenCode (DeepSeek V4.1 Flash) | `.gitignore`, `AGENTS.md`; `entornoRTOS/`, `simulacion3D/` (retirados del índice) | Excluye los entornos locales de Git/GitHub y los retira del índice sin borrar archivos. | `git ls-files` ya no los lista; archivos intactos en disco. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `entornoRTOS/` (fuentes, tests, trazas, viewer) | Congela la base empírica del artículo: S0–S3, pruebas de bus y contexto, determinismo y trazas versionadas. Commit `6041471`. | `make test` PASS: S0 0/17, S1 3/125, S2 0/5, S3 0/3; determinismo PASS. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `main.tex`, `references.bib`, `AGENTS.md` | Reapertura del artículo; 16 referencias verificadas; borrador completo con Introducción, marco teórico, Método, Resultados S0–S3, timeline, discusión y conclusiones. | `./build.sh` OK; 8 páginas; 5.221 palabras; 0 overfull; 16 citas sin undefined. |
 | **2026-11-02** | OpenCode (DeepSeek V4.1 Flash) | `simulacion3D/build_scene.py`, `modules/`, `blender/pathfinder_failure.blend`, `out/frames/film/`, `out/pathfinder_failure.mp4`, `README.md`, `simulacion3D/AGENTS.md`, `AGENTS.md` | I3–I9 del film: escena completa de 15 planos, animación, render 1080p de 4320 frames, codificación con fades y verificación. | Render 59:42 (0,85 s/frame); `ffprobe`: 1920 × 1080, 24 fps, 180,0 s, H.264, yuv420p, sin audio, 32.256.132 bytes; `ffmpeg -f null` DECODE_OK. |
@@ -819,6 +820,8 @@ sim/
 > El historial anterior al 2026-10-30 está en `docs/HISTORIAL.md`.
 
 ### 8.4. Inventario de archivos
+
+> **Nota 2026-11-05:** `entornoRTOS/` y `simulacion3D/` se conservan en disco pero están **excluidos de Git/GitHub** por tamaño. Las filas de esos directorios describen archivos locales, no versionados.
 
 | Ruta | Tipo | Propósito | Estado | Última modificación |
 | :--- | :--- | :--- | :--- | :--- |
@@ -841,7 +844,7 @@ sim/
 | `fuentes/analisis_bibliografico/Referencias_Mendeley.ris` | RIS | Importación Mendeley | Completo | 2026-10-31 |
 | `fuentes/analisis_bibliografico/VOSviewer_*` | Datos | Mapa bibliométrico | **Inconsistente** | 2026-10-31 |
 | `sim/` | Código | Motor S0–S5 | **Archivado** (sustituido por el film) | — |
-| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Completo y congelado**; base empírica (commit `6041471`) | 2026-11-02 · OpenCode |
+| `entornoRTOS/` | Código | Entorno RTOS modelo + software de vuelo; S0–S3 | **Local; fuera de Git** (2026-11-05); base empírica (commit `6041471`) | 2026-11-02 · OpenCode |
 | `entornoRTOS/AGENTS.md` | Documento | Contrato local del entorno RTOS | Activo | 2026-11-02 · OpenCode |
 | `simulacion3D/AGENTS.md` | Documento | Contrato local completo: secuencia de 15 planos, producción, pipeline y R0 | Activo; cierre registrado | 2026-11-02 · OpenCode |
 | `simulacion3D/README.md` | Documento | Build, render y entregable final | Activo | 2026-11-02 · OpenCode |

@@ -23,6 +23,10 @@ entornoRTOS/tests/*.o
 entornoRTOS/entornoRTOS
 entornoRTOS/test_signatures
 
+# Entornos locales de simulación (no se publican en GitHub)
+entornoRTOS/
+simulacion3D/
+
 # Sistema
 .DS_Store
 Thumbs.db
